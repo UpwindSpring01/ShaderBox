@@ -1,0 +1,29 @@
+﻿<Application x:Class="ShaderBox.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="Views/MainWindowPage.xaml">
+    <Application.Resources>
+        <!--<ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml" />
+                <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>-->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.xaml" />
+                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Dark.xaml"/>
+                <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml" />
+                <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml" />
+                <ResourceDictionary Source="Mui.Exceed.DropDownButton.xaml" />
+                <ResourceDictionary Source="Mui.Exceed.ButtonSpinner.xaml" />
+                <ResourceDictionary Source="Mui.Exceed.ColorPicker.xaml" />
+                <ResourceDictionary Source="Mui.Exceed.ColorCanvas.xaml" />
+                
+                <ResourceDictionary Source="ButtonDictionary.xaml"/>
+                <ResourceDictionary Source="ControlDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </Application.Resources>
+</Application>

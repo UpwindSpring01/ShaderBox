@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="ShaderBox.UserControls.ListViewColumns"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <Grid>
+    <DataGrid ItemsSource="{Binding Elements}"  AutoGenerateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="Auto" SelectionMode="Single" 
+              CanUserDeleteRows="False" CanUserResizeRows="False" CanUserAddRows="False" EnableRowVirtualization="False">
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Name" MinWidth="50" Binding="{Binding Name, Mode=OneWay}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTemplateColumn Header="" MinWidth="50" Width="1*">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ContentPresenter Content="{Binding UIElement}" HorizontalAlignment="Stretch"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+
+    </DataGrid>
+    </Grid>
+</UserControl>

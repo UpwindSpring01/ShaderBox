@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<ShaderGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NameIdentifier>PP_CubicLensDistortion_2017_1_23-06_55</NameIdentifier>
+  <Name>PP_CubicLensDistortion</Name>
+  <Description>cublic lends distortion</Description>
+  <IsBuilded>true</IsBuilded>
+  <AnnotationShaders>
+    <Annotations>
+      <ShaderType>Pixel</ShaderType>
+      <Buffers>
+        <Buffer>
+          <Register>t1</Register>
+          <BufferSize>0</BufferSize>
+          <Variables>
+            <Variable Name="myTexture" DataType="Texture" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="false" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="true" Dimension="-1" Offset="0" Size="0">
+              <Value />
+              <AnnotationKeywords />
+            </Variable>
+          </Variables>
+        </Buffer>
+        <Buffer>
+          <Register>b2</Register>
+          <BufferSize>16</BufferSize>
+          <Variables>
+            <Variable Name="gLensDistortion" DataType="Float" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="0" Size="4">
+              <Value>
+                <Value_d>0</Value_d>
+              </Value>
+              <AnnotationKeywords>
+                <KVPairSerializable>
+                  <Key>UIWidget</Key>
+                  <Value>Slider</Value>
+                </KVPairSerializable>
+                <KVPairSerializable>
+                  <Key>UIMin</Key>
+                  <Value>-50</Value>
+                </KVPairSerializable>
+                <KVPairSerializable>
+                  <Key>UIMax</Key>
+                  <Value>50</Value>
+                </KVPairSerializable>
+              </AnnotationKeywords>
+            </Variable>
+            <Variable Name="gCubicDistortion" DataType="Float" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="4" Size="4">
+              <Value>
+                <Value_d>0</Value_d>
+              </Value>
+              <AnnotationKeywords>
+                <KVPairSerializable>
+                  <Key>UIWidget</Key>
+                  <Value>Slider</Value>
+                </KVPairSerializable>
+                <KVPairSerializable>
+                  <Key>UIMin</Key>
+                  <Value>-50</Value>
+                </KVPairSerializable>
+                <KVPairSerializable>
+                  <Key>UIMax</Key>
+                  <Value>50</Value>
+                </KVPairSerializable>
+              </AnnotationKeywords>
+            </Variable>
+          </Variables>
+        </Buffer>
+      </Buffers>
+    </Annotations>
+  </AnnotationShaders>
+  <ShaderGroupType>PostProcessing</ShaderGroupType>
+  <Topology>TriangleList</Topology>
+  <CullMode>Back</CullMode>
+  <FillMode>Solid</FillMode>
+  <HasHullDomainShader>false</HasHullDomainShader>
+  <HasGeometryShader>false</HasGeometryShader>
+  <SelectedModel>0</SelectedModel>
+  <Shaders>
+    <IsBuiltIn>false</IsBuiltIn>
+    <ShaderType>Vertex</ShaderType>
+    <Name>vs.hlsl</Name>
+    <FileLocation>./Resources/PP_CubicLensDistortion_2017_1_23-06_55/vs.hlsl</FileLocation>
+  </Shaders>
+  <Shaders>
+    <IsBuiltIn>false</IsBuiltIn>
+    <ShaderType>Pixel</ShaderType>
+    <Name>ps.hlsl</Name>
+    <FileLocation>./Resources/PP_CubicLensDistortion_2017_1_23-06_55/ps.hlsl</FileLocation>
+  </Shaders>
+</ShaderGroup>

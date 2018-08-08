@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ShaderGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NameIdentifier>PP_Blur_2017_1_22-23_03</NameIdentifier>
+  <Name>PP_Blur</Name>
+  <Description>Blur shader</Description>
+  <IsBuilded>true</IsBuilded>
+  <AnnotationShaders />
+  <ShaderGroupType>PostProcessing</ShaderGroupType>
+  <Topology>TriangleList</Topology>
+  <HasHullDomainShader>false</HasHullDomainShader>
+  <HasGeometryShader>false</HasGeometryShader>
+  <SelectedModel>0</SelectedModel>
+  <Shaders>
+    <IsBuiltIn>false</IsBuiltIn>
+    <ShaderType>Vertex</ShaderType>
+    <Name>vs.hlsl</Name>
+    <FileLocation>./Resources/PP_Blur_2017_1_22-23_03/vs.hlsl</FileLocation>
+  </Shaders>
+  <Shaders>
+    <IsBuiltIn>false</IsBuiltIn>
+    <ShaderType>Pixel</ShaderType>
+    <Name>ps.hlsl</Name>
+    <FileLocation>./Resources/PP_Blur_2017_1_22-23_03/ps.hlsl</FileLocation>
+  </Shaders>
+</ShaderGroup>

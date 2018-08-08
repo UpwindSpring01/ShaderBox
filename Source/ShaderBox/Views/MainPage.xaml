@@ -1,0 +1,95 @@
+﻿<mui:ModernFrame x:Class="ShaderBox.Views.MainPage"
+        xmlns:mui="http://firstfloorsoftware.com/ModernUI" 
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:com="clr-namespace:ShaderBox.Common"
+      xmlns:mvvm="http://prismlibrary.com/"
+      mc:Ignorable="d" 
+      xmlns:control="clr-namespace:ShaderBox.UserControls"
+      d:DesignHeight="300" d:DesignWidth="600"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mvvm:ViewModelLocator.AutoWireViewModel="True">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding RaiseLoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <DockPanel>
+            <StackPanel Margin="180, -54,0,0" Orientation="Horizontal" HorizontalAlignment="Left" DockPanel.Dock="Top">
+                <Button Style="{StaticResource EditInEditor}" Content="Open in editor" Command="{Binding RaiseEditShaderGroupCommand}"/>
+                <Button Style="{StaticResource Delete}" Content="Delete" Command="{Binding RaiseDeleteShaderGroupCommand}"/>
+            </StackPanel>
+        <Grid DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" x:Name="mainGrid" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="200"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition MinWidth="200"/>
+            </Grid.ColumnDefinitions>
+            <ListBox SelectionMode="Single" x:Name="shaderGroupLBox" Grid.Column="0" Grid.Row="1" ItemsSource="{Binding ShadersViewSource}" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Style="{StaticResource ListBoxWrapStyle}"
+                  SelectedItem="{Binding SelectedShaderGroup}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Width="200" Height="240" Orientation="Vertical">
+                            <Border Background="#FF252525" Height="200" Width="200">
+                                <Image Source="{Binding Image}" Height="200" Stretch="Uniform" />
+                            </Border>
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Background="#FF151515" Height="40">
+                                <TextBlock Text="{Binding Name}" Foreground="White" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Margin="5,0,5,0" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding ShaderGroupType}" Foreground="White" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Margin="5,0,5,0" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <GridSplitter Grid.Column="1" Width="10" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" Margin="2,0,2,0"/>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" MinHeight="200" x:Name="shaderPropertiesRow"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*" MinHeight="200" x:Name="viewportRow"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ListView ItemsSource="{Binding ElementName=shaderGroupLBox, Path=SelectedItem.AnnotationShaderGroups}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                          ScrollViewer.CanContentScroll="False">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Expander ExpandDirection="Down" Header="{Binding Type}" IsExpanded="True" Collapsed="Expander_SetHandled" Expanded="Expander_SetHandled">
+                                    <control:ListViewColumns />
+                                </Expander>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <GroupBox Grid.Row="1" Header="Viewport">
+                        <StackPanel Orientation="Vertical">
+                            <ComboBox ItemsSource="{Binding Workspace.Models}" Height="100" ScrollViewer.CanContentScroll="False" SelectedIndex="0" SelectedItem="{Binding SelectedModel, Mode=TwoWay}" ItemTemplateSelector="{com:ComboBoxTemplateSelectorExtension
+        SelectedItemTemplate={StaticResource DropDownSelectedImage},
+        DropdownItemsTemplate={StaticResource DropDownImage}}" >
+                            </ComboBox>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Column="0">Camera Offset:</Label>
+                                <Slider Grid.Column="1" Minimum="0" Maximum="100" VerticalAlignment="Center" Value="{Binding CameraOffset, Mode=OneWayToSource}" />
+                            </Grid>
+                        </StackPanel>
+                    </GroupBox>
+                    <Button Grid.Row="2" Command="{Binding RaiseSaveShaderPropertiesCommand}">Save</Button>
+                </Grid>
+                <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+
+                <control:ViewportControl Grid.Row="2" PageUri="/ShaderBox;component/Views/MainPage.xaml"/>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</mui:ModernFrame>

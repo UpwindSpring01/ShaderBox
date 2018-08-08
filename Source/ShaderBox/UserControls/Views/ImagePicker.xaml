@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="ShaderBox.UserControls.Views.ImagePicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:com="clr-namespace:ShaderBox.Common"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:mvvm="http://prismlibrary.com/"
+        mvvm:ViewModelLocator.AutoWireViewModel="True">
+    <ComboBox ItemsSource="{Binding Images}" Height="100" SelectedItem="{Binding SelectedImage, Mode=TwoWay}" ItemTemplateSelector="{com:ComboBoxTemplateSelectorExtension
+        SelectedItemTemplate={StaticResource DropDownSelectedImage},
+        DropdownItemsTemplate={StaticResource DropDownImage}}" MaxDropDownHeight="391" ScrollViewer.CanContentScroll="False" />
+</UserControl>

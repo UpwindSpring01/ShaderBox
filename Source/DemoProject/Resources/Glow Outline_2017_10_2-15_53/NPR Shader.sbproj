@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<ShaderGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NameIdentifier>Glow Outline_2017_10_2-15_53</NameIdentifier>
+  <Name>NPR Shader</Name>
+  <Description>A geometry shader showcasing two silhoutte rendering techniques and one crease</Description>
+  <IsBuilded>true</IsBuilded>
+  <AnnotationShaders>
+    <Annotations>
+      <ShaderType>Pixel</ShaderType>
+      <Buffers>
+        <Buffer>
+          <Register>b3</Register>
+          <BufferSize>64</BufferSize>
+          <Variables>
+            <Variable Name="m_ColorDiffuse" DataType="Float" IsSNorm="false" IsUNorm="false" Rows="1" Columns="3" IsScalar="false" IsVector="true" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="0" Size="12">
+              <Value>
+                <Color r="231" g="231" b="231" a="255" scR="0.8" scG="0.8" scB="0.8" scA="1" />
+              </Value>
+              <AnnotationKeywords>
+                <KVPairSerializable>
+                  <Key>UIWidget</Key>
+                  <Value>Color</Value>
+                </KVPairSerializable>
+              </AnnotationKeywords>
+            </Variable>
+            <Variable Name="m_ColorAmbient" DataType="Float" IsSNorm="false" IsUNorm="false" Rows="1" Columns="3" IsScalar="false" IsVector="true" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="16" Size="12">
+              <Value>
+                <Color r="231" g="231" b="231" a="255" scR="0.8" scG="0.8" scB="0.8" scA="1" />
+              </Value>
+              <AnnotationKeywords>
+                <KVPairSerializable>
+                  <Key>UIWidget</Key>
+                  <Value>Color</Value>
+                </KVPairSerializable>
+              </AnnotationKeywords>
+            </Variable>
+            <Variable Name="m_AmbientIntensity" DataType="Float" IsSNorm="false" IsUNorm="true" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="28" Size="4">
+              <Value>
+                <Value_d>0</Value_d>
+              </Value>
+              <AnnotationKeywords />
+            </Variable>
+            <Variable Name="m_SilhoutteEdgeColor" DataType="Float" IsSNorm="false" IsUNorm="false" Rows="1" Columns="4" IsScalar="false" IsVector="true" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="32" Size="16">
+              <Value>
+                <Color r="231" g="231" b="231" a="255" scR="0.8" scG="0.8" scB="0.8" scA="1" />
+              </Value>
+              <AnnotationKeywords>
+                <KVPairSerializable>
+                  <Key>UIWidget</Key>
+                  <Value>Color</Value>
+                </KVPairSerializable>
+              </AnnotationKeywords>
+            </Variable>
+            <Variable Name="m_CreaseEdgeColor" DataType="Float" IsSNorm="false" IsUNorm="false" Rows="1" Columns="4" IsScalar="false" IsVector="true" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="48" Size="16">
+              <Value>
+                <Color r="231" g="231" b="231" a="255" scR="0.8" scG="0.8" scB="0.8" scA="1" />
+              </Value>
+              <AnnotationKeywords>
+                <KVPairSerializable>
+                  <Key>UIWidget</Key>
+                  <Value>Color</Value>
+                </KVPairSerializable>
+              </AnnotationKeywords>
+            </Variable>
+          </Variables>
+        </Buffer>
+        <Buffer>
+          <Register>t0</Register>
+          <BufferSize>0</BufferSize>
+          <Variables>
+            <Variable Name="gModelTexture" DataType="Texture" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="false" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="true" Dimension="-1" Offset="0" Size="0">
+              <Value />
+              <AnnotationKeywords />
+            </Variable>
+          </Variables>
+        </Buffer>
+      </Buffers>
+    </Annotations>
+    <Annotations>
+      <ShaderType>Geometry</ShaderType>
+      <Buffers>
+        <Buffer>
+          <Register>b2</Register>
+          <BufferSize>16</BufferSize>
+          <Variables>
+            <Variable Name="creaseWidth" DataType="Float" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="0" Size="4">
+              <Value>
+                <Value_d>0</Value_d>
+              </Value>
+              <AnnotationKeywords>
+                <KVPairSerializable>
+                  <Key>UIMin</Key>
+                  <Value>0</Value>
+                </KVPairSerializable>
+                <KVPairSerializable>
+                  <Key>UIMax</Key>
+                  <Value>1</Value>
+                </KVPairSerializable>
+                <KVPairSerializable>
+                  <Key>UIStep</Key>
+                  <Value>0.05</Value>
+                </KVPairSerializable>
+              </AnnotationKeywords>
+            </Variable>
+            <Variable Name="edgeWidth" DataType="Float" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="4" Size="4">
+              <Value>
+                <Value_d>0</Value_d>
+              </Value>
+              <AnnotationKeywords>
+                <KVPairSerializable>
+                  <Key>UIMin</Key>
+                  <Value>0</Value>
+                </KVPairSerializable>
+                <KVPairSerializable>
+                  <Key>UIMax</Key>
+                  <Value>1</Value>
+                </KVPairSerializable>
+                <KVPairSerializable>
+                  <Key>UIStep</Key>
+                  <Value>0.05</Value>
+                </KVPairSerializable>
+              </AnnotationKeywords>
+            </Variable>
+            <Variable Name="creaseThreshold" DataType="Float" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="8" Size="4">
+              <Value>
+                <Value_d>0</Value_d>
+              </Value>
+              <AnnotationKeywords>
+                <KVPairSerializable>
+                  <Key>UIMin</Key>
+                  <Value>0</Value>
+                </KVPairSerializable>
+                <KVPairSerializable>
+                  <Key>UIMax</Key>
+                  <Value>1</Value>
+                </KVPairSerializable>
+                <KVPairSerializable>
+                  <Key>UIStep</Key>
+                  <Value>0.1</Value>
+                </KVPairSerializable>
+              </AnnotationKeywords>
+            </Variable>
+            <Variable Name="useSilhoutte0" DataType="Bool" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="12" Size="4">
+              <Value>
+                <Value_b>false</Value_b>
+              </Value>
+              <AnnotationKeywords />
+            </Variable>
+          </Variables>
+        </Buffer>
+      </Buffers>
+    </Annotations>
+  </AnnotationShaders>
+  <ShaderGroupType>Standard</ShaderGroupType>
+  <Topology>TriangleList_Adj</Topology>
+  <CullMode>None</CullMode>
+  <FillMode>Solid</FillMode>
+  <HasHullDomainShader>false</HasHullDomainShader>
+  <HasGeometryShader>true</HasGeometryShader>
+  <SelectedModel>1333716873</SelectedModel>
+  <Shaders>
+    <IsBuiltIn>false</IsBuiltIn>
+    <ShaderType>Vertex</ShaderType>
+    <Name>vs.hlsl</Name>
+    <FileLocation>./Resources/Glow Outline_2017_10_2-15_53/vs.hlsl</FileLocation>
+  </Shaders>
+  <Shaders>
+    <IsBuiltIn>false</IsBuiltIn>
+    <ShaderType>Pixel</ShaderType>
+    <Name>ps.hlsl</Name>
+    <FileLocation>./Resources/Glow Outline_2017_10_2-15_53/ps.hlsl</FileLocation>
+  </Shaders>
+  <Shaders>
+    <IsBuiltIn>false</IsBuiltIn>
+    <ShaderType>Header</ShaderType>
+    <Name>Header.hlsli</Name>
+    <FileLocation>./Resources/Glow Outline_2017_10_2-15_53/Header.hlsli</FileLocation>
+  </Shaders>
+  <Shaders>
+    <IsBuiltIn>false</IsBuiltIn>
+    <ShaderType>Geometry</ShaderType>
+    <Name>gs.hlsl</Name>
+    <FileLocation>./Resources/Glow Outline_2017_10_2-15_53/gs.hlsl</FileLocation>
+  </Shaders>
+</ShaderGroup>

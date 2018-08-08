@@ -1,0 +1,366 @@
+﻿<mui:ModernFrame x:Class="ShaderBox.Views.ShaderEditorPage"
+              xmlns:mui="http://firstfloorsoftware.com/ModernUI" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="1080" d:DesignWidth="1920"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:mvvm="http://prismlibrary.com/"
+             xmlns:converters="clr-namespace:ShaderBox.Converters"
+             xmlns:model="clr-namespace:ShaderBox.Models"
+             xmlns:control="clr-namespace:ShaderBox.UserControls"
+             mvvm:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:com="clr-namespace:ShaderBox.Common"
+             xmlns:local="clr-namespace:ShaderBox.Views"
+             Focusable="True"
+             MouseDown="root_MouseDown"
+             x:Name="root"
+             >
+    <mui:ModernFrame.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVis"/>
+        <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVis"/>
+        <converters:MultiBoolToVisibilityConverter x:Key="multiBoolToVis"/>
+        <converters:SpecialBoolToVisibilityConverter x:Key="specialBoolToVis" />
+        <converters:NullToBooleanConverter x:Key="nullToBool"/>
+        <converters:ValueConverterGroup x:Key="enumToVisibility">
+            <converters:EnumToBooleanConverter/>
+            <converters:InverseBoolToVisibilityConverter />
+        </converters:ValueConverterGroup>
+    </mui:ModernFrame.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding RaiseLoadedCommand}" />
+        </i:EventTrigger>
+        <mvvm:InteractionRequestTrigger SourceObject="{Binding ShaderGroupRequest, Mode=OneWay}">
+            <mvvm:PopupWindowAction CenterOverAssociatedObject="True" IsModal="True" WindowStyle="{DynamicResource ModernDialogStyle}">
+                <mvvm:PopupWindowAction.WindowContent>
+                    <local:ShaderWizardPage/>
+                </mvvm:PopupWindowAction.WindowContent>
+            </mvvm:PopupWindowAction>
+        </mvvm:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+    <DockPanel Loaded="UserControl_Loaded">
+        <DockPanel Margin="180, -54,0,0" DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" DockPanel.Dock="Left">
+                <Button Style="{StaticResource New}" Content="New" Command="{Binding RaiseNewShaderGroupCommand}"/>
+                <Button Style="{StaticResource SaveDocument}" Content="Save File" Command="{Binding RaiseSaveDocumentCommand}" 
+                            CommandParameter="{Binding ElementName=ExplorerListView, Path=SelectedItem}"/>
+                <Button Style="{StaticResource SaveGroup}" Content="Save Shader" Command="{Binding RaiseSaveShaderGroupCommand}" 
+                            CommandParameter="{Binding ElementName=ExplorerListView, Path=SelectedItem.Group}"/>
+                <!--<Button Style="{StaticResource SaveGroupAs}" Content="Save Shader As"/>-->
+                <Button Style="{StaticResource SaveAll}" Content="Save All" Command="{Binding RaiseSaveAllCommand}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Button Style="{StaticResource Build}" Content="Build" Command="{Binding RaiseBuildShaderGroupCommand}"/>
+            </StackPanel>
+        </DockPanel>
+        <Grid DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" x:Name="mainGrid" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="150" Width="1*" x:Name="explorerColumn"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition MinWidth="200" Width="5*" x:Name="codeViewColumn"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition MinWidth="200" Width="2*" x:Name="shaderViewPropColumn"/>
+            </Grid.ColumnDefinitions>
+            <Expander x:Name="explorerExpander" ExpandDirection="Right" IsExpanded="True" Grid.Column="0" Collapsed="explorerExpander_Collapsed" Expanded="explorerExpander_Expanded">
+                <Expander.Header>
+                    <TextBlock Text="Explorer">
+                        <TextBlock.LayoutTransform>
+                            <RotateTransform Angle="90" />
+                        </TextBlock.LayoutTransform>
+                    </TextBlock>
+                </Expander.Header>
+                <ListView ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                          Margin="0" Width="auto" x:Name="ExplorerListView" ItemsSource="{Binding ShaderGroupsView}" IsSynchronizedWithCurrentItem="True">
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="{x:Type GroupItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Expander IsExpanded="True" Collapsed="Expander_SetHandled" Expanded="Expander_SetHandled">
+                                                    <Expander.Header>
+                                                        <DockPanel>
+                                                            <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right"  Orientation="Horizontal">
+                                                                <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}},
+                                                                    Path=DataContext.RaiseAddHeaderCommand}" CommandParameter="{Binding Name}">
+                                                                    <Button.Style>
+                                                                        <Style TargetType="Button" BasedOn="{StaticResource HoverBaseButton}">
+                                                                            <Setter Property="ToolTip" Value="Add header"/>
+                                                                            <Setter Property="Content">
+                                                                                <Setter.Value>
+                                                                                    <Grid Margin="0">
+                                                                                        <Path Data="M15,0L17,0 17,15.000008 32,15.000008 32,17.000008 17,17.000008 17,32 15,32 15,17.000008 0,17.000008 0,15.000008 15,15.000008z" 
+                        Width="14" Height="14" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="1.5"  />
+                                                                                    </Grid>
+                                                                                </Setter.Value>
+                                                                            </Setter>
+                                                                        </Style>
+                                                                    </Button.Style>
+                                                                </Button>
+                                                                <StackPanel Orientation="Horizontal" Visibility="{Binding Name.ShaderGroupType, Converter={StaticResource enumToVisibility}, ConverterParameter={x:Static model:ShaderGroupType.SharedHeaders}}">
+                                                                    <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}},
+                                                                    Path=DataContext.RaiseEditShaderGroupCommand}" CommandParameter="{Binding Name}">
+                                                                        <Button.Style>
+                                                                            <Style TargetType="ButtonBase" BasedOn="{StaticResource HoverBaseButton}">
+                                                                                <Setter Property="ToolTip" Value="Edit"/>
+                                                                                <Setter Property="Content">
+                                                                                    <Setter.Value>
+                                                                                        <Grid Margin="0">
+                                                                                            <Path Data="M16,8.5C11.899994,8.5 8.5,11.899994 8.5,16 8.5,20.100006 11.899994,23.5 16,23.5 20.099976,23.5 23.5,20.100006 23.5,16 23.5,11.899994 20.099976,8.5 16,8.5z M14.099976,0L17.899994,0 17.899994,4.8999939C19.599976,5.1999817,21.199982,5.8999939,22.5,6.7999878L26,3.2999878 28.699982,6 25.199982,9.5C26.199982,10.799988,26.799988,12.399994,27.099976,14.100006L32,14.100006 32,17.899994 27.099976,17.899994C26.799988,19.600006,26.099976,21.199982,25.199982,22.5L28.699982,26 26,28.699982 22.5,25.199982C21.199982,26.199982,19.599976,26.799988,17.899994,27.100006L17.899994,32 14.099976,32 14.099976,27.100006C12.399994,26.799988,10.799988,26.100006,9.5,25.199982L6,28.699982 3.2999878,26 6.7999878,22.5C5.7999878,21.199982,5.1999817,19.600006,4.8999939,17.899994L0,17.899994 0,14.100006 4.8999939,14.100006C5.1999817,12.399994,5.8999939,10.799988,6.7999878,9.5L3.2999878,6 6,3.2999878 9.5,6.7999878C10.799988,5.7999878,12.399994,5.1999817,14.099976,4.8999939z"   
+                        Width="14" Height="14" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="1.5" />
+                                                                                        </Grid>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                            </Style>
+                                                                        </Button.Style>
+                                                                    </Button>
+                                                                    <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}},
+                                                                    Path=DataContext.RaiseCloseShaderGroupCommand}" CommandParameter="{Binding Name}">
+                                                                        <Button.Style>
+                                                                            <Style TargetType="ButtonBase" BasedOn="{StaticResource HoverCloseBaseButton}">
+                                                                                <Setter Property="ToolTip" Value="Close"/>
+                                                                                <Setter Property="Content">
+                                                                                    <Setter.Value>
+                                                                                        <Grid Margin="0">
+                                                                                            <Path Data="M0,0 L12,12 M12,0 L0,12 Z" 
+                        Width="12" Height="12"  VerticalAlignment="Center" HorizontalAlignment="Center" 
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="1.5"  />
+                                                                                        </Grid>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                            </Style>
+                                                                        </Button.Style>
+                                                                    </Button>
+                                                                </StackPanel>
+                                                            </StackPanel>
+
+                                                            <TextBlock DockPanel.Dock="Left" Text="{Binding Name.Name}" Foreground="LightGray" TextTrimming="CharacterEllipsis" />
+                                                        </DockPanel>
+                                                    </Expander.Header>
+                                                    <ItemsPresenter Margin="2,0,0,0" />
+                                                </Expander>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                            <Setter Property="Padding" Value="0"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel Margin="0">
+                                <!-- Unable to use "HoverRemoveButton" style form dictionary
+                                Only last item from group will get styled -->
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Visibility="{Binding IsDeleteable, Converter={StaticResource boolToVis}}">
+                                    <Button  Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}},
+                                            Path=DataContext.RaiseMakeSharedHeaderCommand}" CommandParameter="{Binding .}">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource HoverBaseButton}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Group.ShaderGroupType}" Value="SharedHeaders">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                                <Setter Property="ToolTip" Value="Make shared"/>
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <Grid Margin="0">
+                                                            <Path Data="M16.833997,0L14.443011,4.8720093 14.504962,12.14502 16.928966,12.127991 19.396001,16.953979 12.118983,17.018005 12.141993,19.437988 9.8739941,32 7.2920315,19.47998 7.2759797,17.054016 0,17.114014 2.3820119,12.247986 4.8080303,12.224976 4.7480328,4.9520264 2.2820363,0.11999512z" 
+                        Width="14" Height="14" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="1.5"  />
+                                                        </Grid>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                    <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}},
+                                                                    Path=DataContext.RaiseRemoveHeaderCommand}" CommandParameter="{Binding .}">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource HoverRemoveButton}">
+                                                <Setter Property="ToolTip" Value="Delete"/>
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <Grid Margin="0">
+                                                            <Path Data="M16.989005,13.842001L16.989005,29.052002 20.687001,29.052002 20.687001,13.842001z M7.4209858,13.842001L7.4209858,29.052002 11.118981,29.052002 11.118981,13.842001z M2.0159897,11.217L26.091996,11.217 26.091996,32 2.0159897,32z M7.9869949,0L20.097982,0 20.097982,3.8629994 28.083999,3.8629994 28.083999,8.0010003 0,8.0010003 0,3.8629994 7.9869949,3.8629994z"
+                        Width="14" Height="14" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="1.5"  />
+                                                        </Grid>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </StackPanel>
+                                <control:EditableTextBlock MaxLength="20"  DockPanel.Dock="Left" Text="{Binding Name}" TextTrimming="CharacterEllipsis" IsEditable="{Binding IsBuiltIn, Converter={StaticResource InverseBoolConverter}}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="TextChanged">
+                                            <mvvm:InvokeCommandAction Command="{Binding ElementName=root, Path=DataContext.RaiseShaderNameChangedCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </control:EditableTextBlock>
+                                <TextBlock Visibility="{Binding IsBuiltIn, Converter={StaticResource BooleanToVisibilityConverter}}" Text=" [Built-in]"/>
+                                <TextBlock>*
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsModified}" Value="False">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Expander>
+            <GridSplitter Grid.Column="1" ResizeBehavior="BasedOnAlignment" HorizontalAlignment="Stretch" x:Name="explorerCodeViewSplitter"
+                          ResizeDirection="Columns">
+                <GridSplitter.Visibility>
+                    <MultiBinding Converter="{StaticResource multiBoolToVis}">
+                        <Binding ElementName="explorerExpander" Path="IsExpanded"/>
+                        <Binding ElementName="codeViewExpander" Path="IsExpanded"/>
+                    </MultiBinding>
+                </GridSplitter.Visibility>
+            </GridSplitter>
+
+            <Expander Grid.Column="2" x:Name="codeViewExpander" ExpandDirection="Right" IsExpanded="True"
+ Collapsed="codeViewExpander_Collapsed" Expanded="codeViewExpander_Expanded">
+                <Expander.Header>
+                    <TextBlock Text="Code view">
+                        <TextBlock.LayoutTransform>
+                            <RotateTransform Angle="90" />
+                        </TextBlock.LayoutTransform>
+                    </TextBlock>
+                </Expander.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="200" Height="3*" x:Name="editorRow"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition MinHeight="90" Height="1*" x:Name="errorRow"/>
+                    </Grid.RowDefinitions>
+                    <avalonEdit:TextEditor x:Name="textEditor" Document="{Binding ElementName=ExplorerListView, Path=SelectedItem.Document}"
+        FontFamily="Consolas"  IsEnabled="{Binding ElementName=textEditor, Path=Document, Converter={StaticResource nullToBool}}"
+    SyntaxHighlighting="C++"
+    FontSize="10pt" ShowLineNumbers="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"/>
+                    <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" Visibility="{Binding ElementName=errorExpander, Path=IsExpanded, Converter={StaticResource boolToVis}}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+                    <Expander Grid.Row="2" Header="Errors" x:Name="errorExpander" ExpandDirection="Up" IsExpanded="True" Collapsed="errorExpander_Collapsed" Expanded="errorExpander_Expanded">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ListView ItemsSource="{Binding ElementName=ExplorerListView, Path=SelectedItem.Errors}" 
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Style="{StaticResource ListviewWithEmpty}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <mvvm:InvokeCommandAction Command="{Binding SelectErrorCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <Button Grid.Column="1" Style="{StaticResource BinaryIcon}" VerticalAlignment="Center" Content="Compile"
+                                    Command="{Binding RaiseCompileShaderCommand}"/>
+                        </Grid>
+                    </Expander>
+                </Grid>
+            </Expander>
+            <GridSplitter Grid.Column="3" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns">
+                <GridSplitter.Visibility>
+                    <MultiBinding Converter="{StaticResource specialBoolToVis}">
+                        <Binding ElementName="explorerExpander" Path="IsExpanded"/>
+                        <Binding ElementName="codeViewExpander" Path="IsExpanded"/>
+                        <Binding ElementName="shaderViewPropExpander" Path="IsExpanded"/>
+                    </MultiBinding>
+                </GridSplitter.Visibility>
+            </GridSplitter>
+            <Expander Grid.Column="4" x:Name="shaderViewPropExpander" ExpandDirection="Left" IsExpanded="True"
+                      Collapsed="shaderViewPropExpander_Collapsed" Expanded="shaderViewPropExpander_Expanded" 
+                      >
+                <Expander.Header>
+                    <TextBlock Text="Shader Properties + Viewport">
+                        <TextBlock.LayoutTransform>
+                            <RotateTransform Angle="90" />
+                        </TextBlock.LayoutTransform>
+                    </TextBlock>
+                </Expander.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*" MinHeight="200" x:Name="shaderPropertiesRow"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="1*" MinHeight="200" x:Name="viewportRow"/>
+                    </Grid.RowDefinitions>
+                    <Expander Grid.Row="0" Header="Shader Properties" x:Name="shaderPropertiesExpander" ExpandDirection="Down" IsExpanded="True" Collapsed="shaderPropertiesExpander_Collapsed" Expanded="shaderPropertiesExpander_Expanded">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <ListView ItemsSource="{Binding SelectedShaderGroup.AnnotationShaderGroups}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Expander ExpandDirection="Down" Header="{Binding Type}" IsExpanded="True" Collapsed="Expander_SetHandled" Expanded="Expander_SetHandled">
+                                        <control:ListViewColumns />
+                                    </Expander>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                           
+                            <GroupBox Grid.Row="1" Header="Viewport" >
+                                <StackPanel Orientation="Vertical">
+                                    <ComboBox ItemsSource="{Binding Workspace.Models}" Height="100" ScrollViewer.CanContentScroll="False" SelectedIndex="0" SelectedItem="{Binding SelectedModel, Mode=TwoWay}" ItemTemplateSelector="{com:ComboBoxTemplateSelectorExtension
+        SelectedItemTemplate={StaticResource DropDownSelectedImage},
+        DropdownItemsTemplate={StaticResource DropDownImage}}" >
+                            </ComboBox>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <Label Grid.Column="0">Camera Offset: </Label>
+                                        <Slider Grid.Column="1" Minimum="0" Maximum="100" VerticalAlignment="Center" Value="{Binding CameraOffset, Mode=OneWayToSource}" />
+                                    </Grid>
+                                </StackPanel>
+                            </GroupBox>
+                            <Button Grid.Row="2" Command="{Binding RaiseSaveShaderPropertiesCommand}">Save</Button>
+                        </Grid>
+                    </Expander>
+                    <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" >
+                        <GridSplitter.Visibility>
+                            <MultiBinding Converter="{StaticResource multiBoolToVis}">
+                                <Binding ElementName="shaderPropertiesExpander" Path="IsExpanded"/>
+                                <Binding ElementName="viewportExpander" Path="IsExpanded"/>
+                            </MultiBinding>
+                        </GridSplitter.Visibility>
+                    </GridSplitter>
+                    <Expander Grid.Row="2" Header="Viewport" x:Name="viewportExpander" ExpandDirection="Up" IsExpanded="True" Collapsed="viewportExpander_Collapsed" Expanded="viewportExpander_Expanded">
+                        <control:ViewportControl PageUri="/ShaderBox;component/Views/ShaderEditorPage.xaml"/>
+                    </Expander>
+                </Grid>
+            </Expander>
+        </Grid>
+    </DockPanel>
+</mui:ModernFrame>
+
+    

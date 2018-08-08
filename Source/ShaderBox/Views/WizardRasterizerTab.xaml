@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="ShaderBox.Views.WizardRasterizerTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width="3*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0">Cull mode:</Label>
+		<ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding CullModeTypes}" Width="250" HorizontalAlignment="Right" 
+                  SelectedValue="{Binding CullMode, Mode=TwoWay}" DisplayMemberPath="Display" SelectedValuePath="Value">
+			<ComboBox.Style>
+				<Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding ElementName=shaderTypeLBox, Path=SelectedIndex}" Value="1">
+							<Setter Property="ComboBox.IsEnabled" Value="False"/>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</ComboBox.Style>
+		</ComboBox>
+		<Label Grid.Row="1">Fill mode:</Label>
+		<ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FillModeTypes}" Width="250" HorizontalAlignment="Right" 
+                  SelectedValue="{Binding FillMode, Mode=TwoWay}" DisplayMemberPath="Display" SelectedValuePath="Value">
+			<ComboBox.Style>
+				<Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding ElementName=shaderTypeLBox, Path=SelectedIndex}" Value="1">
+							<Setter Property="ComboBox.IsEnabled" Value="False"/>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</ComboBox.Style>
+		</ComboBox>
+	</Grid>
+</UserControl>

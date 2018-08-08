@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);..\..\External\DirectXMesh\DirectXMesh\;..\..\External\DirectXTex\DirectXTex\;..\..\External\DirectXTK\Inc\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>%(AdditionalDependencies);..\..\External\DirectXMesh\DirectXMesh\Bin\Desktop_2017_Win10\x64\Debug\DirectXMesh.lib;..\..\External\DirectXTex\DirectXTex\Bin\Desktop_2017_Win10\x64\Debug\DirectXTex.lib;..\..\External\DirectXTK\Bin\Desktop_2017_Win10\x64\Debug\DirectXTK.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

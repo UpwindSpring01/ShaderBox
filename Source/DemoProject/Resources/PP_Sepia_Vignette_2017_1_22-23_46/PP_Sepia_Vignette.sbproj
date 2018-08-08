@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ShaderGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NameIdentifier>PP_Sepia_Vignette_2017_1_22-23_46</NameIdentifier>
+  <Name>PP_Sepia_Vignette</Name>
+  <Description>sepia and vignette</Description>
+  <IsBuilded>true</IsBuilded>
+  <AnnotationShaders>
+    <Annotations>
+      <ShaderType>Pixel</ShaderType>
+      <Buffers>
+        <Buffer>
+          <Register>b2</Register>
+          <BufferSize>16</BufferSize>
+          <Variables>
+            <Variable Name="RADIUS" DataType="Float" IsSNorm="false" IsUNorm="true" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="0" Size="4">
+              <Value>
+                <Value_d>0</Value_d>
+              </Value>
+              <AnnotationKeywords />
+            </Variable>
+            <Variable Name="SOFTNESS" DataType="Float" IsSNorm="false" IsUNorm="true" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="4" Size="4">
+              <Value>
+                <Value_d>0</Value_d>
+              </Value>
+              <AnnotationKeywords />
+            </Variable>
+            <Variable Name="useSepia" DataType="Bool" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="8" Size="4">
+              <Value>
+                <Value_b>false</Value_b>
+              </Value>
+              <AnnotationKeywords />
+            </Variable>
+          </Variables>
+        </Buffer>
+      </Buffers>
+    </Annotations>
+  </AnnotationShaders>
+  <ShaderGroupType>PostProcessing</ShaderGroupType>
+  <Topology>TriangleList</Topology>
+  <CullMode>Back</CullMode>
+  <FillMode>Solid</FillMode>
+  <HasHullDomainShader>false</HasHullDomainShader>
+  <HasGeometryShader>false</HasGeometryShader>
+  <SelectedModel>0</SelectedModel>
+  <Shaders>
+    <IsBuiltIn>false</IsBuiltIn>
+    <ShaderType>Vertex</ShaderType>
+    <Name>vs.hlsl</Name>
+    <FileLocation>./Resources/PP_Sepia_Vignette_2017_1_22-23_46/vs.hlsl</FileLocation>
+  </Shaders>
+  <Shaders>
+    <IsBuiltIn>false</IsBuiltIn>
+    <ShaderType>Pixel</ShaderType>
+    <Name>ps.hlsl</Name>
+    <FileLocation>./Resources/PP_Sepia_Vignette_2017_1_22-23_46/ps.hlsl</FileLocation>
+  </Shaders>
+</ShaderGroup>

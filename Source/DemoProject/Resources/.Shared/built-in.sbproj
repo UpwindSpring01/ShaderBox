@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ShaderGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NameIdentifier>.Shared</NameIdentifier>
+  <Name>Shared headers [../.Shared/]</Name>
+  <Description />
+  <IsBuilded>false</IsBuilded>
+  <AnnotationShaders />
+  <ShaderGroupType>SharedHeaders</ShaderGroupType>
+  <Topology>TriangleList</Topology>
+  <HasHullDomainShader>false</HasHullDomainShader>
+  <HasGeometryShader>false</HasGeometryShader>
+  <SelectedModel>0</SelectedModel>
+  <Shaders>
+    <IsBuiltIn>true</IsBuiltIn>
+    <ShaderType>Header</ShaderType>
+    <Name>SB_Header.hlsli</Name>
+    <FileLocation>./Resources/.Shared/SB_Header.hlsli</FileLocation>
+  </Shaders>
+  <Shaders>
+    <IsBuiltIn>false</IsBuiltIn>
+    <ShaderType>Header</ShaderType>
+    <Name>PP_VS.hlsli</Name>
+    <FileLocation>./Resources/.Shared/PP_VS.hlsli</FileLocation>
+  </Shaders>
+</ShaderGroup>

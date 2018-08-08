@@ -1,0 +1,108 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26606.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderBox", "ShaderBox\ShaderBox.csproj", "{47F5B8B3-71BD-4830-B39F-B957643A4C94}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AA259527-A03E-491E-834F-2CE1C5594B89} = {AA259527-A03E-491E-834F-2CE1C5594B89}
+		{9206C7A9-6994-4F24-A417-560DCF0CC2AC} = {9206C7A9-6994-4F24-A417-560DCF0CC2AC}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "D3DVisualisation", "Engine\D3DVisualisation\D3DVisualisation.vcxproj", "{AA259527-A03E-491E-834F-2CE1C5594B89}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShaderRuntimeCompiler", "Engine\ShaderRuntimeCompiler\ShaderRuntimeCompiler.vcxproj", "{9206C7A9-6994-4F24-A417-560DCF0CC2AC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "D3DVisualisationTest", "Tests\D3DVisualisationTest\D3DVisualisationTest.vcxproj", "{BFBE8CDE-187F-4973-A792-B5856650F51D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirstFloor.ModernUI.Custom", "FirstFloor.ModernUI\FirstFloor.ModernUI.Custom.csproj", "{56BA0A66-9432-4573-975A-7D962F511933}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModernUI.Xceed.Toolkit", "External\mui.extended.toolkit\ModernUI.Xceed\ModernUI.Xceed.Toolkit\ModernUI.Xceed.Toolkit.csproj", "{5A634859-F873-42B4-A533-F05404A22378}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "External\mui\1.0\FirstFloor.ModernUI\Shared\Shared.shproj", "{EEDA74FC-CA5A-4C06-9654-2600B74E2D1D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShaderTools", "ShaderTools", "{24BF0A6F-34A8-4473-BD72-4620041EFA78}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{5E2365AA-5245-4F1B-A5A9-C1E7F4F1E5A7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D5E6AD40-B4D6-48F4-9F85-B738EE15B125}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{34FA8108-793B-4036-BCC1-59F35CC5417F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Hlsl", "External\HlslTools\src\ShaderTools.CodeAnalysis.Hlsl\ShaderTools.CodeAnalysis.Hlsl.csproj", "{B88A9CE2-1456-4D32-843B-475C4EFE4BAF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis", "External\HlslTools\src\ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj", "{672F25BD-26DD-4655-BF41-E66C1DC84BA3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.Utilities", "External\HlslTools\src\ShaderTools.Utilities\ShaderTools.Utilities.csproj", "{6BE94A1D-AE22-4DD6-B6B6-78C6A4E3A842}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoProject", "DemoProject\DemoProject.csproj", "{D30D7AD4-6E97-48B0-A734-A77231053B97}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		External\mui\1.0\FirstFloor.ModernUI\Shared\Shared.projitems*{56ba0a66-9432-4573-975a-7d962f511933}*SharedItemsImports = 4
+		External\mui\1.0\FirstFloor.ModernUI\Shared\Shared.projitems*{eeda74fc-ca5a-4c06-9654-2600b74e2d1d}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47F5B8B3-71BD-4830-B39F-B957643A4C94}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{47F5B8B3-71BD-4830-B39F-B957643A4C94}.Debug|x64.Build.0 = Debug|Any CPU
+		{47F5B8B3-71BD-4830-B39F-B957643A4C94}.Release|x64.ActiveCfg = Release|Any CPU
+		{47F5B8B3-71BD-4830-B39F-B957643A4C94}.Release|x64.Build.0 = Release|Any CPU
+		{AA259527-A03E-491E-834F-2CE1C5594B89}.Debug|x64.ActiveCfg = Debug|x64
+		{AA259527-A03E-491E-834F-2CE1C5594B89}.Debug|x64.Build.0 = Debug|x64
+		{AA259527-A03E-491E-834F-2CE1C5594B89}.Release|x64.ActiveCfg = Release|x64
+		{AA259527-A03E-491E-834F-2CE1C5594B89}.Release|x64.Build.0 = Release|x64
+		{9206C7A9-6994-4F24-A417-560DCF0CC2AC}.Debug|x64.ActiveCfg = Debug|x64
+		{9206C7A9-6994-4F24-A417-560DCF0CC2AC}.Debug|x64.Build.0 = Debug|x64
+		{9206C7A9-6994-4F24-A417-560DCF0CC2AC}.Release|x64.ActiveCfg = Release|x64
+		{9206C7A9-6994-4F24-A417-560DCF0CC2AC}.Release|x64.Build.0 = Release|x64
+		{BFBE8CDE-187F-4973-A792-B5856650F51D}.Debug|x64.ActiveCfg = Debug|x64
+		{BFBE8CDE-187F-4973-A792-B5856650F51D}.Debug|x64.Build.0 = Debug|x64
+		{BFBE8CDE-187F-4973-A792-B5856650F51D}.Release|x64.ActiveCfg = Release|x64
+		{BFBE8CDE-187F-4973-A792-B5856650F51D}.Release|x64.Build.0 = Release|x64
+		{56BA0A66-9432-4573-975A-7D962F511933}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{56BA0A66-9432-4573-975A-7D962F511933}.Debug|x64.Build.0 = Debug|Any CPU
+		{56BA0A66-9432-4573-975A-7D962F511933}.Release|x64.ActiveCfg = Release|Any CPU
+		{56BA0A66-9432-4573-975A-7D962F511933}.Release|x64.Build.0 = Release|Any CPU
+		{5A634859-F873-42B4-A533-F05404A22378}.Debug|x64.ActiveCfg = Debug|x64
+		{5A634859-F873-42B4-A533-F05404A22378}.Debug|x64.Build.0 = Debug|x64
+		{5A634859-F873-42B4-A533-F05404A22378}.Release|x64.ActiveCfg = Release|x64
+		{5A634859-F873-42B4-A533-F05404A22378}.Release|x64.Build.0 = Release|x64
+		{B88A9CE2-1456-4D32-843B-475C4EFE4BAF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B88A9CE2-1456-4D32-843B-475C4EFE4BAF}.Debug|x64.Build.0 = Debug|Any CPU
+		{B88A9CE2-1456-4D32-843B-475C4EFE4BAF}.Release|x64.ActiveCfg = Release|Any CPU
+		{B88A9CE2-1456-4D32-843B-475C4EFE4BAF}.Release|x64.Build.0 = Release|Any CPU
+		{672F25BD-26DD-4655-BF41-E66C1DC84BA3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{672F25BD-26DD-4655-BF41-E66C1DC84BA3}.Debug|x64.Build.0 = Debug|Any CPU
+		{672F25BD-26DD-4655-BF41-E66C1DC84BA3}.Release|x64.ActiveCfg = Release|Any CPU
+		{672F25BD-26DD-4655-BF41-E66C1DC84BA3}.Release|x64.Build.0 = Release|Any CPU
+		{6BE94A1D-AE22-4DD6-B6B6-78C6A4E3A842}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6BE94A1D-AE22-4DD6-B6B6-78C6A4E3A842}.Debug|x64.Build.0 = Debug|Any CPU
+		{6BE94A1D-AE22-4DD6-B6B6-78C6A4E3A842}.Release|x64.ActiveCfg = Release|Any CPU
+		{6BE94A1D-AE22-4DD6-B6B6-78C6A4E3A842}.Release|x64.Build.0 = Release|Any CPU
+		{D30D7AD4-6E97-48B0-A734-A77231053B97}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D30D7AD4-6E97-48B0-A734-A77231053B97}.Debug|x64.Build.0 = Debug|Any CPU
+		{D30D7AD4-6E97-48B0-A734-A77231053B97}.Release|x64.ActiveCfg = Release|Any CPU
+		{D30D7AD4-6E97-48B0-A734-A77231053B97}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AA259527-A03E-491E-834F-2CE1C5594B89} = {5E2365AA-5245-4F1B-A5A9-C1E7F4F1E5A7}
+		{9206C7A9-6994-4F24-A417-560DCF0CC2AC} = {5E2365AA-5245-4F1B-A5A9-C1E7F4F1E5A7}
+		{BFBE8CDE-187F-4973-A792-B5856650F51D} = {D5E6AD40-B4D6-48F4-9F85-B738EE15B125}
+		{5A634859-F873-42B4-A533-F05404A22378} = {34FA8108-793B-4036-BCC1-59F35CC5417F}
+		{EEDA74FC-CA5A-4C06-9654-2600B74E2D1D} = {34FA8108-793B-4036-BCC1-59F35CC5417F}
+		{24BF0A6F-34A8-4473-BD72-4620041EFA78} = {34FA8108-793B-4036-BCC1-59F35CC5417F}
+		{B88A9CE2-1456-4D32-843B-475C4EFE4BAF} = {24BF0A6F-34A8-4473-BD72-4620041EFA78}
+		{672F25BD-26DD-4655-BF41-E66C1DC84BA3} = {24BF0A6F-34A8-4473-BD72-4620041EFA78}
+		{6BE94A1D-AE22-4DD6-B6B6-78C6A4E3A842} = {24BF0A6F-34A8-4473-BD72-4620041EFA78}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C259F59-287F-4C48-906F-D569BCE39479}
+	EndGlobalSection
+EndGlobal

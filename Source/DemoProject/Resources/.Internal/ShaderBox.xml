@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<Workspace xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SelectedIndex>7</SelectedIndex>
+  <SelectedPage>/ShaderBox;component/Views/MainPage.xaml</SelectedPage>
+  <Shadergroups>
+    <ShaderGroup Path="./Resources/.Shared/built-in.sbproj" IsOpen="true" />
+    <ShaderGroup Path="./Resources/PP_Blur_2017_1_22-23_03/PP_Blur.sbproj" IsOpen="true" />
+    <ShaderGroup Path="./Resources/PP_Sepia_Vignette_2017_1_22-23_46/PP_Sepia_Vignette.sbproj" IsOpen="true" />
+    <ShaderGroup Path="./Resources/PP_CubicLensDistortion_2017_1_23-06_55/PP_CubicLensDistortion.sbproj" IsOpen="true" />
+    <ShaderGroup Path="./Resources/Glow Outline_2017_10_2-15_53/NPR Shader.sbproj" IsOpen="true" />
+  </Shadergroups>
+  <Images>
+    <Image Name="plus.png" ImagePath="./Resources/.Data/Images/plus.png" IsBuiltIn="false" />
+    <Image Name="barrier1.jpg" ImagePath="./Resources/.Data/Images/barrier1.jpg" IsBuiltIn="false" />
+    <Image Name="crashbarrel1.jpg" ImagePath="./Resources/.Data/Images/crashbarrel1.jpg" IsBuiltIn="false" />
+    <Image Name="traffic cone.jpg" ImagePath="./Resources/.Data/Images/traffic cone.jpg" IsBuiltIn="false" />
+    <Image Name="gradient.png" ImagePath="./Resources/.Data/Images/gradient.png" IsBuiltIn="false" />
+  </Images>
+  <Models>
+    <Model Name="Cube.obj" ImagePath="./Resources/.Internal/Models/Cube.png" Path="./Resources/.Internal/Models/Cube.obj" Hash="0" IsBuiltIn="true" />
+    <Model Name="tower.obj" ImagePath="./Resources/.Data/Thumbnails/tower_2017_10_2-15_48.png" Path="./Resources/.Data/Models/tower.obj" Hash="145058193" IsBuiltIn="false" />
+    <Model Name="cone.obj" ImagePath="./Resources/.Data/Thumbnails/cone_2017_10_2-15_52.png" Path="./Resources/.Data/Models/cone.obj" Hash="1853764123" IsBuiltIn="false" />
+    <Model Name="barrier.obj" ImagePath="./Resources/.Data/Thumbnails/barrier_2017_10_2-22_36.png" Path="./Resources/.Data/Models/barrier.obj" Hash="1702154102" IsBuiltIn="false" />
+    <Model Name="pole.obj" ImagePath="./Resources/.Data/Thumbnails/pole_2017_10_2-22_36.png" Path="./Resources/.Data/Models/pole.obj" Hash="1333716873" IsBuiltIn="false" />
+  </Models>
+</Workspace>

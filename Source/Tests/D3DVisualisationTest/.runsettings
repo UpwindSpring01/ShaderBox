@@ -1,0 +1,6 @@
+<RunSettings>
+  <RunConfiguration>
+    <ResultsDirectory>.\TestResults</ResultsDirectory>
+    <TargetPlatform>x64</TargetPlatform>
+  </RunConfiguration>
+</RunSettings>
