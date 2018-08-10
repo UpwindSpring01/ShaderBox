@@ -1,18 +1,18 @@
 [submodule "ShaderBox/External/HlslTools"]
-	path = ShaderBox/External/HlslTools
+	path = Source/External/HlslTools
 	url = https://github.com/tgjones/HlslTools.git
 [submodule "ShaderBox/External/mui"]
-	path = ShaderBox/External/mui
+	path = Source/External/mui
 	url = https://github.com/firstfloorsoftware/mui.git
 [submodule "ShaderBox/External/mui.extended.toolkit"]
-	path = ShaderBox/External/mui.extended.toolkit
+	path = Source/External/mui.extended.toolkit
 	url = https://github.com/UpwindSpring01/mui.extended.toolkit.git
 [submodule "ShaderBox/External/DirectXTex"]
-	path = ShaderBox/External/DirectXTex
+	path = Source/External/DirectXTex
 	url = https://github.com/Microsoft/DirectXTex.git
 [submodule "ShaderBox/External/DirectXTK"]
-	path = ShaderBox/External/DirectXTK
+	path = Source/External/DirectXTK
 	url = https://github.com/Microsoft/DirectXTK.git
 [submodule "ShaderBox/External/DirectXMesh"]
-	path = ShaderBox/External/DirectXMesh
+	path = Source/External/DirectXMesh
 	url = https://github.com/Microsoft/DirectXMesh.git
