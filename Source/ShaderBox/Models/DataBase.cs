@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using System;
 using System.IO;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 
 namespace ShaderBox.Models
 {
-    public class DataBase
+    public class DataBase : BindableBase
     {
         [XmlAttribute("Name")]
         public string Name { get; set; }
@@ -13,8 +14,21 @@ namespace ShaderBox.Models
         [XmlAttribute("IsBuiltIn")]
         public bool IsBuiltIn { get; set; }
 
+        private string _imagePath;
         [XmlAttribute("ImagePath")]
-        public string ImagePath { get; set; }
+        public string ImagePath
+        {
+            get
+            {
+                return _imagePath;
+            }
+            set
+            {
+                _imagePath = value;
+                _image = null;
+                RaisePropertyChanged("Image");
+            }
+        }
 
         private BitmapImage _image = null;
 

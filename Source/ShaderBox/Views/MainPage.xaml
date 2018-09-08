@@ -87,8 +87,7 @@
                     <Button Grid.Row="2" Command="{Binding RaiseSaveShaderPropertiesCommand}">Save</Button>
                 </Grid>
                 <GridSplitter Grid.Row="1" ResizeBehavior="PreviousAndNext" ResizeDirection="Rows" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
-
-                <control:ViewportControl Grid.Row="2" PageUri="/ShaderBox;component/Views/MainPage.xaml"/>
+                <control:ViewportControl Grid.Row="2" />
             </Grid>
         </Grid>
     </DockPanel>

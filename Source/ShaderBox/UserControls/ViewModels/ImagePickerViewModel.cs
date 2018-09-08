@@ -40,8 +40,6 @@ namespace ShaderBox.UserControls.ViewModels
                     _annotionVariable.AnnotationValue.Value = Images.FirstOrDefault((i => i.Name == _annotionVariable.Annotations["ResourceName"]))?.ImagePath ?? "";
                 }
                 _annotionVariable.UpdateBuffer();
-
-
             }
         }
 

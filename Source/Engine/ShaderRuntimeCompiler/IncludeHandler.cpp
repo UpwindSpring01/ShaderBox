@@ -7,12 +7,13 @@ IncludeHandler::IncludeHandler(const char* shaderLocation, IncludeCallback inclu
 	_includeDelegate = includeDelegate;
 }
 
-HRESULT __stdcall IncludeHandler::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
+HRESULT __stdcall IncludeHandler::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID /*pParentData*/, LPCVOID *ppData, UINT *pBytes)
 {
 	if (IncludeType == D3D_INCLUDE_LOCAL)
 	{
 		std::ifstream includeFile;
-		try {
+		try 
+		{
 			// Ask shaderBox to update the file on disk
 			_includeDelegate(pFileName);
 
@@ -51,7 +52,8 @@ HRESULT __stdcall IncludeHandler::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFil
 
 }
 
-HRESULT __stdcall IncludeHandler::Close(LPCVOID pData) {
+HRESULT __stdcall IncludeHandler::Close(LPCVOID pData) 
+{
 	char* buf = (char*)pData;
 	delete[] buf;
 	return S_OK;

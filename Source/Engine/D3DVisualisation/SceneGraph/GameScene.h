@@ -1,89 +1,67 @@
 #pragma once
 
-class GameObject;
-
-struct BaseConstantBufferFrame
+namespace SpringWindEngine
 {
-	XMFLOAT4X4 view = {};
-	XMFLOAT4X4 projection = {};
-	XMFLOAT4X4 viewInverse = {};
-	XMFLOAT3 lightDirection = XMFLOAT3(-0.577f, -0.577f, 0.577f);
-};
+	class GameObject;
+	class SpringWindWindow;
 
-struct BaseConstantBufferObject
-{
-	XMFLOAT4X4 world = {};
-	XMFLOAT4X4 worldViewProjection = {};
-	XMFLOAT4X4 worldInverse = {};
-};
-
-struct VertexPosTex
-{
-public:
-
-	VertexPosTex() {};
-	VertexPosTex(XMFLOAT3 pos, XMFLOAT2 uv) :
-		Position(pos), UV(uv) {}
-
-	XMFLOAT3 Position;
-	XMFLOAT2 UV;
-};
-
-struct QuadPosTex
-{
-public:
-
-	QuadPosTex() {};
-	QuadPosTex(VertexPosTex vert1, VertexPosTex vert2, VertexPosTex vert3, VertexPosTex vert4) :
-		Vertex1(vert1), Vertex2(vert2), Vertex3(vert3), Vertex4(vert4) {}
-
-	VertexPosTex Vertex1;
-	VertexPosTex Vertex2;
-	VertexPosTex Vertex3;
-	VertexPosTex Vertex4;
-};
-
-
-
-class GameScene
-{
-public:
-	GameScene(const GameContext& gameContext);
-	virtual ~GameScene();
-
-	void AddChild(GameObject* pObj);
-	void Draw(const GameContext& gameContext);
-	void UpdateObjectBuffer(const GameContext& gameContext);
-	void BindBuffers();
-	BaseConstantBufferObject* GetObjectDataCBuffer() const { return m_pBaseCBufferObjectData; }
-
-	void ClearPPShader()
+	struct VertexPosTex
 	{
-		m_pPPEffect = nullptr;
+	public:
+
+		VertexPosTex() {};
+		VertexPosTex(XMFLOAT3 pos, XMFLOAT2 uv) :
+			Position(pos), UV(uv) {}
+
+		XMFLOAT3 Position;
+		XMFLOAT2 UV;
 	};
-	void AddPPShader(Effect* pEffect);
-private:
-	void RootUpdate();
-	void CreateVertexBuffer();
-private:
-	void InitFrameAndObjectBuffers();
-	void InitSamplers();
 
-	ID3D11Buffer *m_pBaseCBufferFrameBuffer;
-	BaseConstantBufferFrame *m_pBaseCBufferFrameData;
+	struct QuadPosTex
+	{
+	public:
 
-	ID3D11Buffer *m_pBaseCBufferObjectBuffer;
-	BaseConstantBufferObject *m_pBaseCBufferObjectData;
+		QuadPosTex() {};
+		QuadPosTex(VertexPosTex vert1, VertexPosTex vert2, VertexPosTex vert3, VertexPosTex vert4) :
+			Vertex1(vert1), Vertex2(vert2), Vertex3(vert3), Vertex4(vert4) {}
 
-	static constexpr UINT SAMPLER_AMOUNT = 6;
-	ID3D11SamplerState *m_pSamplersArr[SAMPLER_AMOUNT];
+		VertexPosTex Vertex1;
+		VertexPosTex Vertex2;
+		VertexPosTex Vertex3;
+		VertexPosTex Vertex4;
+	};
 
-	Effect* m_pPPEffect = nullptr;
-	ID3D11Buffer* m_pVertexBuffer = nullptr;
 
-	GameContext m_GameContext;
-	std::vector<GameObject*> m_ChildArr;
+	class GameScene
+	{
+	public:
+		void AddChild(GameObject* pObj);
+		void Draw(const EngineContext& gameContext, const WindowContext& windowContext, const RenderTarget& mainRT, const RenderTarget& ppRT);
 
-	GameScene(const GameScene &obj) = delete;
-	GameScene& operator=(const GameScene& obj) = delete;
-};
+		const SpringWindWindow* GetWindow() const { return m_pWindow; }
+		CameraComponent* GetActiveCamera() const { return m_pActiveCamera; }
+		const std::vector<GameObject*>& GetChildren() const { return m_ChildPtrArr; }
+
+		void SetActiveCamera(CameraComponent* pComponent);
+	private:
+		void RootUpdate();
+
+		friend class SceneManager;
+		friend class SpringWindWindow;
+		GameScene();
+		virtual ~GameScene();
+
+		void SetWindow(SpringWindWindow* pWindow) { m_pWindow = pWindow; }
+
+		ID3D11Buffer* m_pVertexBuffer = nullptr;
+
+		CameraComponent* m_pActiveCamera = nullptr;
+
+		std::vector<GameObject*> m_ChildPtrArr;
+
+		SpringWindWindow* m_pWindow = nullptr;
+
+		GameScene(const GameScene &obj) = delete;
+		GameScene& operator=(const GameScene& obj) = delete;
+	};
+}

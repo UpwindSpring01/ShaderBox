@@ -397,6 +397,12 @@ namespace ShaderBox.ViewModels
                         shader?.Delete();
                         sg.Shaders.Remove(shader);
                     }
+
+                    shader = sg.Shaders.FirstOrDefault((s) => s.ShaderType == ShaderType.Vertex);
+                    if (shader == null)
+                    {
+                        sg.AddShader(new Shader("vs.hlsl", ShaderType.Vertex));
+                    }
                 }
                 else if (_isInEditMode)
                 {
@@ -412,12 +418,6 @@ namespace ShaderBox.ViewModels
                     shader = sg.Shaders.FirstOrDefault((s) => s.ShaderType == ShaderType.Geometry);
                     shader?.Delete();
                     sg.Shaders.Remove(shader);
-                }
-
-                shader = sg.Shaders.FirstOrDefault((s) => s.ShaderType == ShaderType.Vertex);
-                if (shader == null)
-                {
-                    sg.AddShader(new Shader("vs.hlsl", ShaderType.Vertex));
                 }
 
                 shader = sg.Shaders.FirstOrDefault((s) => s.ShaderType == ShaderType.Pixel);

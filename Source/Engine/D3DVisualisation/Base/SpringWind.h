@@ -1,119 +1,76 @@
-//////////////////////////
-// Stripped/Changed version of the SpringWind Engine
-//////////////////////////
-
 #pragma once
 
-class SpringWind
+#include "Containers/ThreadSafeFunctionContainer.h"
+
+namespace SpringWindEngine
 {
-public:
-	SpringWind();
-	virtual ~SpringWind();
+	class SpringWindWindow;
+	struct EngineContext;
 
-	static SpringWind* GetInstance() { return m_pInstance; }
-
-	HRESULT Initialize();
-
-	HRESULT Render(void * pResource, bool isNewSurface);
-
-	HRESULT RenderTumbnail(const std::wstring model, const std::wstring saveLocation);
-	HRESULT RenderTumbnail(const std::wstring saveLocation);
-
-	GameScene* GetScene() const { return m_pScene; }
-	const GameContext& GetGameContext() const { return m_GameContext; }
-
-	HRESULT SetRasterizerState(const int cullMode, const int fillMode);
-	// Special function definitions to ensure alingment between c# and c++ 
-	//void* operator new(size_t size)
-	//{
-	//	return _aligned_malloc(size, 16);
-	//}
-
-	//void operator delete(void *p)
-	//{
-	//	_aligned_free(p);
-	//}
-
-	void SetCameraAspectRatio(float aspectRatio);
-	void SetCameraOffset(const float offset);
-
-	struct RenderTarget
+	class SpringWind final
 	{
-		RenderTarget() {}
-		ID3D11RenderTargetView* m_pRenderTargetView = nullptr;
-		ID3D11DepthStencilView* m_pDepthStencilView = nullptr;
-		ID3D11ShaderResourceView* m_pShaderResourceView = nullptr;
-		ID3D11Texture2D* m_pDepthStencil = nullptr;
-		ID3D11Texture2D* m_pColor = nullptr;
+	public:
+		SpringWind();
+		virtual ~SpringWind();
 
-		~RenderTarget()
-		{
-			SafeRelease(m_pRenderTargetView);
-			SafeRelease(m_pDepthStencilView);
-			SafeRelease(m_pShaderResourceView);
-			SafeRelease(m_pDepthStencil);
-			SafeRelease(m_pColor);
-		}
+		static SpringWind* GetInstance() { return m_pInstance; }
 
-		RenderTarget(const RenderTarget &obj) = delete;
-		RenderTarget& operator=(const RenderTarget& obj) = delete;
+		static constexpr LPCTSTR GetWindowClassName(){ return L"SpringWindEngineClassName"; }
+
+		void RegisterWindow(SpringWindWindow* pWindow, const HINSTANCE hInstance, const HWND parentHandle, const LPCTSTR windowName);
+		void UnregisterWindow(SpringWindWindow* pWindow);
+
+		HRESULT Initialize(const HINSTANCE hInstance);
+		void Shutdown();
+
+		void StartGameLoop();
+
+		ThreadSafeFunctionContainer& GetThreadSafeFunctionContainer() { return m_ThreadSafeFunctionContainer; }
+		const EngineContext& GetEngineContext() const { return m_EngineContext; }
+
+		void UpdateObjectBuffer();
+		void UpdateFrameBuffer();
+
+		const CameraComponent* GetLastRenderedCamera() const { return m_pLastRenderedCamera; }
+		void SetLastRenderedCamera(const CameraComponent* pCamera) { m_pLastRenderedCamera = pCamera; }
+
+		ID3D11VertexShader* GetPPVertexShader() const { return m_pPPVertexShader; }
+
+		const SpringWindWindow* GetLastRenderedWindow() const { return m_pLastRenderedWindow; }
+		void ResetLastRenderedWindow() { m_pLastRenderedWindow = nullptr; }
+		const std::vector<SpringWindWindow*>& GetWindows() const { return m_WindowPtrArr; }
+
+	private:
+		void SetDefaultSamplers();
+		void InitFrameAndObjectBuffers();
+		void BindBuffers();
+
+		void ShutdownInternal();
+		
+		EngineContext m_EngineContext;
+
+		static SpringWind* m_pInstance;
+		HINSTANCE m_pHInstance = nullptr;
+
+		std::vector<SpringWindWindow*> m_WindowPtrArr;
+		bool m_IsRunning = false;
+
+		static constexpr UINT SAMPLER_AMOUNT = 6;
+		ID3D11SamplerState* m_pSamplersArr[SAMPLER_AMOUNT];
+
+		ID3D11Buffer* m_pBaseCBufferFrameBuffer;
+		ID3D11Buffer* m_pBaseCBufferObjectBuffer;
+
+		ID3D11VertexShader* m_pPPVertexShader = nullptr;
+
+		ThreadSafeFunctionContainer m_ThreadSafeFunctionContainer;
+
+		D3D_FEATURE_LEVEL m_FeatureLevel;
+
+		const CameraComponent* m_pLastRenderedCamera;
+		const SpringWindWindow* m_pLastRenderedWindow;
+
+		SpringWind(const SpringWind& t) = delete;
+		SpringWind& operator=(const SpringWind& t) = delete;
 	};
-
-	RenderTarget& GetRenderTarget()
-	{
-		return (m_IsRenderingThumb) ? m_ThumbRT : m_MainRT;
-	}
-
-	RenderTarget& GetPPRenderTarget()
-	{
-		return (m_IsRenderingThumb) ? m_ThumbPPRT : m_MainPPRT;
-	}
-
-	UINT GetWidth()
-	{
-		return (m_IsRenderingThumb) ? THUMB_SIZE : m_Width;
-	}
-
-	UINT GetHeight()
-	{
-		return (m_IsRenderingThumb) ? THUMB_SIZE : m_Height;
-	}
-private:
-	void SetUpViewport();
-	void UpdatePPTargets(SpringWind::RenderTarget& rt, const UINT width, const UINT height);
-	// Initial window resolution
-	UINT m_Width;
-	UINT m_Height;
-
-	static SpringWind* m_pInstance;
-
-	bool m_IsRenderingThumb = false;
-
-	float m_CameraOffset = 0.0f;
-
-	HRESULT DestroyBuffers();
-	HRESULT CreateBuffers();
-	HRESULT InitRenderTarget(void* pResource);
-	static const UINT THUMB_SIZE = 200;
-	HRESULT InitThumbnailRenderTarget();
-
-	D3D_FEATURE_LEVEL m_featureLevel;
-
-	RenderTarget m_MainRT;
-	RenderTarget m_ThumbRT;
-	RenderTarget m_MainPPRT;
-	RenderTarget m_ThumbPPRT;
-
-	friend class GameScene;
-	friend class SpriteRenderer;
-
-
-	D3D11_VIEWPORT m_Viewport = {};
-
-	GameScene* m_pScene = nullptr;
-	GameContext m_GameContext;
-
-	SpringWind(const SpringWind& t) = delete;
-	SpringWind& operator=(const SpringWind& t) = delete;
-};
-
+}

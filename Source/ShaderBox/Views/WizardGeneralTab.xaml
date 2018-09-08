@@ -94,8 +94,18 @@
 		</GroupBox>
 		<GroupBox Grid.Row="4" Grid.ColumnSpan="2" Header="Shaders:" Margin="0,0,0,10">
 			<StackPanel Orientation="Horizontal">
-				<CheckBox Margin="0,0,10,0" IsEnabled="False" IsChecked="True">Vertex
-				</CheckBox>
+				<CheckBox Margin="0,0,10,0" IsEnabled="False">Vertex
+                    <CheckBox.Style>
+                        <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
+                            <Setter Property="IsChecked" Value="True"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=shaderTypeLBox, Path=SelectedIndex}" Value="1">
+                                    <Setter Property="CheckBox.IsChecked" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </CheckBox.Style>
+                </CheckBox>
 				<CheckBox Margin="0,0,10,0" IsChecked="{Binding HasHullDomainShader, Mode=TwoWay}">Hull and Domain
 					<CheckBox.Style>
 						<Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">

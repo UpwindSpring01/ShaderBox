@@ -21,59 +21,6 @@ namespace ShaderBox.General
         [DllImport("ShaderRuntimeCompiler.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void DeleteArray(ref IntPtr ptr);
 
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int Init();
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Cleanup();
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int Render(IntPtr resourcePointer, bool isNewSurface);
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int UpdateShaders([MarshalAs(UnmanagedType.LPWStr)]string identifier,
-           [MarshalAs(UnmanagedType.LPWStr)]string vertex,
-           [MarshalAs(UnmanagedType.LPWStr)]string hull,
-           [MarshalAs(UnmanagedType.LPWStr)]string domain,
-           [MarshalAs(UnmanagedType.LPWStr)]string geometry,
-           [MarshalAs(UnmanagedType.LPWStr)]string pixel);
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-
-        public static extern int UpdateShaderImage(uint cbufferIndex, int shaderType, [MarshalAs(UnmanagedType.LPWStr)]string path);
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int UpdateShaderVariables(uint cbufferIndex, int shaderType, byte[] data, uint length);
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int RenderThumbnail([MarshalAs(UnmanagedType.LPWStr)]string model,
-           [MarshalAs(UnmanagedType.LPWStr)]string saveLocation);
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int RenderThumbnailActive([MarshalAs(UnmanagedType.LPWStr)]string saveLocation);
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-
-        public static extern int SetModel([MarshalAs(UnmanagedType.LPWStr)]string filePath);
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int UpdateShadersPP([MarshalAs(UnmanagedType.LPWStr)]string identifier,
-           [MarshalAs(UnmanagedType.LPWStr)]string vertex,
-           [MarshalAs(UnmanagedType.LPWStr)]string pixel);
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int SetTopology(int topology);
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int SetRasterizerState(int cullMode, int fillMode);
-
-        [DllImport("D3DVisualisation.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int SetCameraOffset(float offset);
-
-        //  [DllImport("winmm.dll", EntryPoint = "mciSendStringA")]
-        //  private static extern int mciSendString(string lpstrCommand, string lpstrReturnString, int uReturnLength, int hwndCallback);
-
         /// <summary>
         /// Method used to invoke an Action that will catch DllNotFoundExceptions and display a warning dialog.
         /// </summary>

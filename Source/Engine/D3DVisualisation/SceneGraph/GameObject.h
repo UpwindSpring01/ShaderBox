@@ -1,29 +1,40 @@
 #pragma once
 
-class BaseComponent;
-class TransformComponent;
-
-class GameObject
+namespace SpringWindEngine
 {
-public:
-	GameObject();
-	virtual ~GameObject();
+	class BaseComponent;
+	class TransformComponent;
 
-	void AddComponent(BaseComponent* pComp);
-	GameScene* GetScene() const { return m_pScene; }
+	class GameObject
+	{
+	public:
+		GameObject();
+		virtual ~GameObject();
 
-	TransformComponent* GetTransform() const { return m_pTransComp; }
-private:
-	friend class GameScene;
-	friend class TransformComponent;
+		void AddComponent(BaseComponent* pComp);
+		GameScene* GetScene() const { return m_pScene; }
 
-	void RootDraw(const GameContext& gameContext);
-	void RootPostDraw();
-	void RootUpdate();
+		TransformComponent* GetTransform() const { return m_pTransComp; }
+		const std::vector<BaseComponent*>& GetComponents() const { return m_pBaseCompArr; }
+	private:
+		friend class GameScene;
+		friend class TransformComponent;
 
-	friend class GameScene;
-	GameScene* m_pScene = nullptr;
+		void RootDraw(const EngineContext& engineContext);
+		void RootUpdate();
+		void SetTransformDirty();
 
-	TransformComponent* m_pTransComp = nullptr;
-	std::vector<BaseComponent*> m_pBaseCompArr;
-};
+		friend class GameScene;
+		GameScene* m_pScene = nullptr;
+		enum DirtyFlag : byte
+		{
+			SW_DIRTY_NONE = 0,
+			SW_DIRTY_TRANSFORM = 1 << 1,
+		};
+
+		byte m_DirtyFlag = SW_DIRTY_NONE;
+
+		TransformComponent* m_pTransComp = nullptr;
+		std::vector<BaseComponent*> m_pBaseCompArr;
+	};
+}

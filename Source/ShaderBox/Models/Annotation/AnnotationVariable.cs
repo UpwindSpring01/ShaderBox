@@ -1,5 +1,6 @@
 ﻿using ShaderBox.General;
 using ShaderBox.UserControls.Views;
+using ShaderBox.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -123,11 +124,24 @@ namespace ShaderBox.Models.Annotation
             }
         }
 
-        public void UpdateBuffer()
+        public void UpdateBuffer(bool marshalBuffer = true)
         {
+            ITempHelper helper = ((App)Application.Current).ActiveViewport;
+            if(helper == null || helper.ViewportHost == null)
+            {
+                return;
+            }
+
             if (IsTexture)
             {
-                NativeMethods.UpdateShaderImage(uint.Parse(Regex.Match(AnnotationGroup.Register, @"\d+").Value), (int)AnnotationGroup.AnnotationShaderGroup.Type, Value?.ToString() ?? "");
+                if(helper.IsStandardShaderActive)
+                {
+                    helper.ViewportHost.UpdateShaderImage(uint.Parse(Regex.Match(AnnotationGroup.Register, @"\d+").Value), (int)AnnotationGroup.AnnotationShaderGroup.Type, Value?.ToString() ?? "");
+                }
+                else
+                {
+                    helper.ViewportHost.UpdatePPShaderImage(uint.Parse(Regex.Match(AnnotationGroup.Register, @"\d+").Value), Value?.ToString() ?? "");
+                }
                 return;
             }
 
@@ -149,7 +163,10 @@ namespace ShaderBox.Models.Annotation
                     CopyColorToBuffer((SerializableColor)Value, DataType.GetPackSizeScalar());
                 }
             }
-            AnnotationGroup.MarshalBuffer();
+            if (marshalBuffer)
+            {
+                AnnotationGroup.MarshalBuffer(helper.ViewportHost, helper.IsStandardShaderActive);
+            }
         }
 
         public void CopyColorToBuffer(SerializableColor color, uint stepOffset, uint startOffset = 0)

@@ -5,9 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-
     <Grid>
-    <DataGrid ItemsSource="{Binding Elements}"  AutoGenerateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="Auto" SelectionMode="Single" 
+    <DataGrid ItemsSource="{Binding Elements}" AutoGenerateColumns="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="Auto" SelectionMode="Single" 
               CanUserDeleteRows="False" CanUserResizeRows="False" CanUserAddRows="False" EnableRowVirtualization="False">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Name" MinWidth="50" Binding="{Binding Name, Mode=OneWay}">
@@ -20,7 +19,7 @@
             <DataGridTemplateColumn Header="" MinWidth="50" Width="1*">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
-                        <ContentPresenter Content="{Binding UIElement}" HorizontalAlignment="Stretch"/>
+                        <ContentPresenter Content="{Binding UIElement, Mode=OneWay}" HorizontalAlignment="Stretch"/>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>

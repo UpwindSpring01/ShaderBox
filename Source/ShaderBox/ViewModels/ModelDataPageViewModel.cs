@@ -1,9 +1,11 @@
 ﻿using ShaderBox.General;
 using ShaderBox.Models;
+using ShaderBoxBridge;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 
 namespace ShaderBox.ViewModels
 {
@@ -45,7 +47,7 @@ namespace ShaderBox.ViewModels
             string imagePath = MainWindowPageViewModel.ShaderBoxModelThumbnailFolderLocation +
                 Path.GetFileNameWithoutExtension(name).CreateUniqueName(MainWindowPageViewModel.ShaderBoxModelThumbnailFolderLocation, ".png");
 
-            NativeMethods.RenderThumbnail(filePath, imagePath);
+
 
             List<int> hashes = Files.Select((m) => m.Hash).ToList();
             int hash;
@@ -54,13 +56,25 @@ namespace ShaderBox.ViewModels
                 hash = rand.Next(int.MaxValue);
             } while (hashes.Contains(hash));
 
-            return new Model3DData()
+            Model3DData data = new Model3DData()
             {
                 Path = newLoc,
                 Name = name,
-                ImagePath = imagePath,
+                ImagePath = null,
                 Hash = hash
             };
+
+            Bridge.CreateThumbnailModel(filePath, imagePath,
+                async () =>
+                {
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        data.ImagePath = imagePath;
+                        Bridge.PopCallbackRenderThumbnail();
+                    });
+                });
+
+            return data;
         }
     }
 }

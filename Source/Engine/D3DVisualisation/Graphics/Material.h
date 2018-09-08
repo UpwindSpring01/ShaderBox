@@ -1,21 +1,23 @@
 #pragma once
 
-class Material
+namespace SpringWindEngine
 {
-public:
-	Material();
+	class Material
+	{
+	public:
+		Material(Effect* pEffect);
+		virtual ~Material();
+		
+		void SetShadersAndBuffers(const EngineContext& engineContext, const TransformComponent* pTransComp);
+		
+		const Effect* GetEffect() const { return m_pEffect; }
+		
+		virtual void BeginDraw() {};
+		virtual void EndDraw() {};
+	private:
+		Effect* m_pEffect = nullptr;
 
-	virtual ~Material();
-
-	void SetShadersAndBuffers(const GameContext& gameContext, const TransformComponent* pTransComp);
-	void UpdateBuffers(const UINT cbufferIndex, const int shaderType, const byte* data, const UINT length);
-	void UpdateImageBuffers(const UINT cbufferIndex, const int shaderType, const std::wstring path);
-	void SetEffect(Effect* pEffect);
-	void BeginDraw() {};
-	void EndDraw() {};
-private:
-	Effect* m_pEffect = nullptr;
-
-	Material(const Material &obj) = delete;
-	Material& operator=(const Material& obj) = delete;
-};
+		Material(const Material &obj) = delete;
+		Material& operator=(const Material& obj) = delete;
+	};
+}

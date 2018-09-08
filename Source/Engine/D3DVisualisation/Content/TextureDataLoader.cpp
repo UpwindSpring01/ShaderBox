@@ -2,58 +2,54 @@
 #include "TextureDataLoader.h"
 #include <algorithm>
 
+using namespace SpringWindEngine;
 
-TextureDataLoader::TextureDataLoader(void)
+SpringWindEngine::TextureDataLoader::TextureDataLoader()
 {
 }
 
 
-TextureDataLoader::~TextureDataLoader(void)
+SpringWindEngine::TextureDataLoader::~TextureDataLoader()
 {
 }
 
-TextureData* TextureDataLoader::Load(const std::initializer_list<std::wstring>& assetFiles)
+Unsafe_Shared_Ptr<TextureData> SpringWindEngine::TextureDataLoader::Load(const std::wstring& assetFile)
 {
-	ID3D11Resource* pTexture;
-	ID3D11ShaderResourceView* pShaderResourceView;
-
-	TexMetadata info;
-	ScratchImage *image = new ScratchImage();
-
 	//Find Extension
-	std::wstring assetFile = *assetFiles.begin();
-
+#ifdef _DEBUG
 	std::wstring extension;
 	if (assetFile.find_last_of(L".") != std::wstring::npos)
 	{
 		extension = assetFile.substr(assetFile.find_last_of(L".") + 1);
 	}
-#ifdef _DEBUG
+
 	else
 	{
 		Logger::LogFormat(Logger::LogLevel::Error, L"TextureDataLoader::LoadContent() > Invalid File Extensions!\nPath: %s", assetFile.c_str());
 		return nullptr;
 	}
+#else
+	std::wstring extension = assetFile.substr(assetFile.find_last_of(L".") + 1);
 #endif // _DEBUG	
 
+	TexMetadata metadata;
+	ScratchImage image;
 	if (lstrcmpiW(extension.c_str(), L"dds") == 0) //DDS Loader
 	{
-		CHECK_HR(LoadFromDDSFile(assetFile.c_str(), DDS_FLAGS_NONE, &info, *image));
+		CHECK_HR(LoadFromDDSFile(assetFile.c_str(), DDS_FLAGS_NONE, &metadata, image));
 	}
 	else if (lstrcmpiW(extension.c_str(), L"tga") == 0) //TGA Loader
 	{
-		CHECK_HR(LoadFromTGAFile(assetFile.c_str(), &info, *image));
+		CHECK_HR(LoadFromTGAFile(assetFile.c_str(), &metadata, image));
 	}
 	else //WIC Loader
 	{
-		CHECK_HR(LoadFromWICFile(assetFile.c_str(), WIC_FLAGS_NONE, &info, *image));
+		CHECK_HR(LoadFromWICFile(assetFile.c_str(), WIC_FLAGS_NONE, &metadata, image));
 	}
 	
-	ID3D11Device* pDevice = SpringWind::GetInstance()->GetGameContext().pDevice;
-	CHECK_HR(CreateTexture(pDevice, image->GetImages(), image->GetImageCount(),image->GetMetadata(), &pTexture));
+	ID3D11ShaderResourceView* pShaderResourceView;
+	CHECK_HR(CreateShaderResourceViewEx(SpringWind::GetInstance()->GetEngineContext().pDevice, image.GetImages(), image.GetImageCount(), metadata,
+		D3D11_USAGE::D3D11_USAGE_IMMUTABLE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, 0, 0, false, &pShaderResourceView));
 
-	CHECK_HR(CreateShaderResourceView(pDevice, image->GetImages(), image->GetImageCount(), image->GetMetadata(), &pShaderResourceView));
-	
-	delete image;
-	return new TextureData(pTexture, pShaderResourceView);
+	return Unsafe_Make_Shared<TextureData>(metadata.width, metadata.height, pShaderResourceView);
 }

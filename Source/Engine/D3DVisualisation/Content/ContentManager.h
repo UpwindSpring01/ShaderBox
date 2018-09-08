@@ -2,46 +2,50 @@
 
 #include "ContentLoader.h"
 
-class ContentManager final
+namespace SpringWindEngine
 {
-public:
-	static void AddLoader(BaseLoader* loader);
+	class MeshLoader;
 
-	template<class T>
-	static T* Load(const std::initializer_list<std::wstring>& assetFiles)
+	class ContentManager final
 	{
-		for (BaseLoader* loader : m_Loaders)
+	public:
+		template<class T>
+		static Unsafe_Shared_Ptr<T> Load(const std::wstring& assetFiles)
 		{
-			if (dynamic_cast<ContentLoader<T>*>(loader) != nullptr)
+			for (BaseLoader* loader : m_Loaders)
 			{
-				return (static_cast<ContentLoader<T>*>(loader))->LoadContent(assetFiles);
+				if (dynamic_cast<ContentLoader<T>*>(loader) != nullptr)
+				{
+					return (static_cast<ContentLoader<T>*>(loader))->LoadContent(assetFiles);
+				}
 			}
+			return nullptr;
 		}
-		return nullptr;
-	}
 
-	template<class T>
-	static bool Update(const std::initializer_list<std::wstring>& assetFiles)
-	{
-		for (BaseLoader* loader : m_Loaders)
+		template<class T>
+		static void UnloadUnused()
 		{
-			if (dynamic_cast<ContentLoader<T>*>(loader) != nullptr)
+			for (BaseLoader* loader : m_Loaders)
 			{
-				return (static_cast<ContentLoader<T>*>(loader))->UpdateContent(assetFiles);
+				if (dynamic_cast<ContentLoader<T>*>(loader) != nullptr)
+				{
+					return (static_cast<ContentLoader<T>*>(loader))->UnloadUnused();
+				}
 			}
+			return false;
 		}
-		return false;
-	}
 
-	static void Release();
-private:
-	ContentManager() {};
-	~ContentManager(void) {};
+		static void Initialize();
+		static void Shutdown();
 
-	static std::vector<BaseLoader*> m_Loaders;
+		static MeshLoader* GetMeshLoader();
+	private:
+		ContentManager() {};
+		~ContentManager(void) {};
 
-	ContentManager(const ContentManager& t) = delete;
-	ContentManager& operator=(const ContentManager& t) = delete;
-};
+		static std::vector<BaseLoader*> m_Loaders;
 
-
+		ContentManager(const ContentManager& t) = delete;
+		ContentManager& operator=(const ContentManager& t) = delete;
+	};
+}

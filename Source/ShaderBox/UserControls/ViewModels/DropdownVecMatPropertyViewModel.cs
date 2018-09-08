@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using ShaderBox.ViewModels;
 
 namespace ShaderBox.UserControls.ViewModels
 {
@@ -83,8 +84,8 @@ namespace ShaderBox.UserControls.ViewModels
                     startOffset = startOffset.RoundUpMultiple16();
                 }
             }
-
-            AnnotationVariable.AnnotationGroup.MarshalBuffer();
+            ITempHelper helper = ((App)Application.Current).ActiveViewport;
+            AnnotationVariable.AnnotationGroup.MarshalBuffer(helper.ViewportHost, helper.IsStandardShaderActive);
         }
 
         public DropdownVecMatPropertyViewModel()

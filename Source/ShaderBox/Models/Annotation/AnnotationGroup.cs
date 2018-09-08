@@ -1,4 +1,5 @@
 ﻿using ShaderBox.General;
+using ShaderBoxBridge;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
@@ -22,12 +23,21 @@ namespace ShaderBox.Models.Annotation
         [XmlIgnore]
         public AnnotationShaderGroup AnnotationShaderGroup { get; set; }
 
-        public void MarshalBuffer()
+        public void MarshalBuffer(ViewportHost host, bool isStandard)
         {
             if (Bytes.Length != 0)
             {
-                NativeMethods.UpdateShaderVariables(uint.Parse(Regex.Match(Register, @"\d+").Value), (int)AnnotationShaderGroup.Type,
-                    Bytes, (uint)Bytes.Length);
+                if (isStandard)
+                {
+                    host.UpdateShaderVariables(uint.Parse(Regex.Match(Register, @"\d+").Value), (int)AnnotationShaderGroup.Type,
+                       Bytes, (uint)Bytes.Length);
+                }
+                else
+                {
+                    host.UpdatePPShaderVariables(uint.Parse(Regex.Match(Register, @"\d+").Value),
+                        Bytes, (uint)Bytes.Length);
+                }
+
             }
         }
     }

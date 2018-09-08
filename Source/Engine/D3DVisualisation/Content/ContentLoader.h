@@ -1,67 +1,63 @@
 #pragma once
 
-class BaseLoader
+namespace SpringWindEngine
 {
-public:
-	BaseLoader() {};
-	virtual ~BaseLoader() {};
-	
-	BaseLoader(const BaseLoader& t) = delete;
-	BaseLoader& operator=(const BaseLoader& t) = delete;
-};
-
-template<class T>
-class ContentLoader : public BaseLoader
-{
-public:
-	ContentLoader() {};
-	virtual ~ContentLoader() 
+	class BaseLoader
 	{
-		for (std::pair<std::wstring, T*> kvp : m_contentReferences)
-		{
-			delete kvp.second;
-		}
-		m_contentReferences.clear();
+	public:
+		BaseLoader() {};
+		virtual ~BaseLoader() {};
+
+		BaseLoader(const BaseLoader& t) = delete;
+		BaseLoader& operator=(const BaseLoader& t) = delete;
 	};
 
-	T* LoadContent(const std::initializer_list<std::wstring>& assetFiles)
+	template<class T>
+	class ContentLoader : public BaseLoader
 	{
-		std::wstring storageString = *assetFiles.begin();
-		for (std::pair<std::wstring, T*> kvp : m_contentReferences)
+	public:
+		using StorageMap = std::unordered_map<std::wstring, Unsafe_Shared_Ptr<T>>;
+		ContentLoader() {};
+		virtual ~ContentLoader()
 		{
-			if (kvp.first.compare(storageString) == 0)
+			m_contentReferencesPtrMap.clear();
+		};
+
+		Unsafe_Shared_Ptr<T> LoadContent(const std::wstring& assetFile)
+		{
+			for (std::pair<std::wstring, Unsafe_Shared_Ptr<T>> kvp : m_contentReferencesPtrMap)
 			{
-				return kvp.second;
+				if (kvp.first.compare(assetFile) == 0)
+				{
+					return kvp.second;
+				}
+			}
+			Unsafe_Shared_Ptr<T> content = Load(assetFile);
+			m_contentReferencesPtrMap.emplace(assetFile, content);
+
+			return content;
+		}
+
+		void UnloadUnused()
+		{
+			for (typename StorageMap::const_iterator it = m_contentReferencesPtrMap.cbegin(); it != m_contentReferencesPtrMap.cend();)
+			{
+				if (it->second.UseCount() == 1)
+				{
+					it = m_contentReferencesPtrMap.erase(it);
+				}
+				else
+				{
+					++it;
+				}
 			}
 		}
-		T* content = Load(assetFiles);
-		m_contentReferences.insert(std::pair<std::wstring, T*>(storageString, content));
+	protected:
+		virtual Unsafe_Shared_Ptr<T> Load(const std::wstring& assetFile) = 0;
 
-		return content;
-	}
-
-	bool UpdateContent(const std::initializer_list<std::wstring>& assetFiles)
-	{
-		std::wstring storageString = *assetFiles.begin();
-		for (std::pair<std::wstring, T*> kvp : m_contentReferences)
-		{
-			if (kvp.first.compare(storageString) == 0)
-			{
-				Update(assetFiles, kvp.second);
-				return true;
-			}
-		}
-		return false;
-	}
-protected:
-	virtual T* Load(const std::initializer_list<std::wstring>& assetFiles) = 0;
-	virtual void Update(const std::initializer_list<std::wstring>& assetFiles, T* content) =0;
-private:
-	static std::unordered_map<std::wstring, T*> m_contentReferences;
-
-	ContentLoader(const ContentLoader& t) = delete;
-	ContentLoader& operator=(const ContentLoader& t) = delete;
-};
-
-template<typename T>
-std::unordered_map<std::wstring, T*> ContentLoader<T>::m_contentReferences = std::unordered_map<std::wstring, T*>();
+		StorageMap m_contentReferencesPtrMap;
+	private:
+		ContentLoader(const ContentLoader& t) = delete;
+		ContentLoader& operator=(const ContentLoader& t) = delete;
+	};
+}

@@ -1,5 +1,7 @@
 ﻿using Prism.Events;
 using Prism.Mvvm;
+using ShaderBox.ViewModels;
+using ShaderBoxBridge;
 using System.Windows;
 using Unity;
 
@@ -13,6 +15,9 @@ namespace ShaderBox
         public static readonly IUnityContainer Container = new UnityContainer();
 
         public bool EngineInitialized { get; set; } = false;
+
+        // Temp workaround until, UI refactor
+        internal ITempHelper ActiveViewport { get; set; }
 
         protected override void OnStartup(StartupEventArgs e)
         {

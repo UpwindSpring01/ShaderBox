@@ -9,6 +9,7 @@ using ShaderBox.Models;
 using ShaderBox.Models.Annotation;
 using ShaderBox.Notifications;
 using ShaderBox.UserControls;
+using ShaderBoxBridge;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
@@ -30,7 +31,7 @@ using System.Windows.Threading;
 
 namespace ShaderBox.ViewModels
 {
-    public partial class ShaderEditorPageViewModel : UndoRedoBindableBase
+    public partial class ShaderEditorPageViewModel : UndoRedoBindableBase, ITempHelper
     {
         private const string PATH_TO_SHARED_FOLDER = "./Resources/Shared/";
 
@@ -80,8 +81,23 @@ namespace ShaderBox.ViewModels
             {
                 if (SelectedShaderGroup != null)
                 {
-                    SetValue(SelectedShaderGroup, value.Hash, () => NativeMethods.SetModel(SelectedModel.Path));
+                    SetValue(SelectedShaderGroup, value.Hash, () => ViewportHost.SetModel(SelectedModel.Path));
                 }
+            }
+        }
+
+
+        private ViewportHost _viewportHost;
+        public ViewportHost ViewportHost
+        {
+            get
+            {
+                return _viewportHost;
+            }
+            set
+            {
+                _viewportHost = value;
+                UpdateShaderViewport();
             }
         }
 
@@ -92,9 +108,11 @@ namespace ShaderBox.ViewModels
             set
             {
                 _cameraOffset = value;
-                NativeMethods.SetCameraOffset(value);
+                ViewportHost?.SetCameraOffset(value);
             }
         }
+
+        public bool IsStandardShaderActive => SelectedShaderGroup.ShaderGroupType == ShaderGroupType.Standard;
 
         private static string _errorPattern = @"\([0-9]+,[0-9]+(-[0-9]+)?\):";
         private static string _numberPattern = @"[0-9]+";
@@ -133,6 +151,8 @@ namespace ShaderBox.ViewModels
 
         private Shader CompilingShader { get; set; }
 
+        private ShaderGroup _settedGroup = null;
+
         public ShaderEditorPageViewModel(ShaderStorageLinker shaderStorage, Workspace workspace, EventAggregator eventAggregator)
         {
             int index = workspace.SelectedIndex;
@@ -166,59 +186,56 @@ namespace ShaderBox.ViewModels
 
         private void UpdateShaderViewport()
         {
-            if (SelectedShaderGroup != null && SelectedShaderGroup.IsBuilded)
+            if (ViewportHost != null)
             {
-                string[] shaderLocations = new string[5];
-                foreach (Shader s in SelectedShaderGroup.Shaders)
+                if (SelectedShaderGroup != null && SelectedShaderGroup.IsBuilded)
                 {
-                    if (s.ShaderType != ShaderType.Header)
+                    string[] shaderLocations = new string[5];
+                    foreach (Shader s in SelectedShaderGroup.Shaders)
                     {
-                        shaderLocations[(int)s.ShaderType] = $"{MainWindowPageViewModel.ShaderBoxResourcesFolderLocation}{SelectedShaderGroup.UniqueName}/.cso/{s.GetShaderTarget().Substring(0, 2)}.cso";
-                    }
-                }
-                if (SelectedShaderGroup.ShaderGroupType == ShaderGroupType.Standard)
-                {
-                    NativeMethods.UpdateShaders(
-                    SelectedShaderGroup.UniqueName,
-                    shaderLocations[0] ?? "", shaderLocations[1] ?? "", shaderLocations[2] ?? "", shaderLocations[3] ?? "", shaderLocations[4] ?? "");
-
-                    NativeMethods.SetTopology((int)SelectedShaderGroup.Topology);
-                    NativeMethods.SetRasterizerState((int)SelectedShaderGroup.CullMode, (int)SelectedShaderGroup.FillMode);
-                }
-                else
-                {
-                    NativeMethods.UpdateShadersPP(
-                    SelectedShaderGroup.UniqueName,
-                    shaderLocations[0] ?? "", shaderLocations[4] ?? "");
-                }
-
-                foreach (AnnotationShaderGroup annotationShaderGroup in _selectedShaderGroup.AnnotationShaderGroups)
-                {
-                    foreach (AnnotationGroup annotationGroup in annotationShaderGroup.Buffers)
-                    {
-                        annotationGroup.MarshalBuffer();
-                        foreach (AnnotationVariable annotationVariable in annotationGroup.AnnotationVariables)
+                        if (s.ShaderType != ShaderType.Header)
                         {
-                            if (annotationVariable.IsTexture)
+                            shaderLocations[(int)s.ShaderType] = $"{MainWindowPageViewModel.ShaderBoxResourcesFolderLocation}{SelectedShaderGroup.UniqueName}/.cso/{s.GetShaderTarget().Substring(0, 2)}.cso";
+                        }
+                    }
+                    bool isStandard = SelectedShaderGroup.ShaderGroupType == ShaderGroupType.Standard;
+                    if (isStandard)
+                    {
+                        ViewportHost.SetShaders(shaderLocations[0] ?? "", shaderLocations[1] ?? "", shaderLocations[2] ?? "", shaderLocations[3] ?? "", shaderLocations[4] ?? "");
+                        ViewportHost.SetTopology((int)SelectedShaderGroup.Topology);
+                        ViewportHost.SetRasterizerState((int)SelectedShaderGroup.CullMode, (int)SelectedShaderGroup.FillMode);
+                    }
+                    else
+                    {
+                        ViewportHost.SetPPShader(shaderLocations[4] ?? "");
+                    }
+                    _settedGroup = SelectedShaderGroup;
+
+                    foreach (AnnotationShaderGroup annotationShaderGroup in SelectedShaderGroup.AnnotationShaderGroups)
+                    {
+                        foreach (AnnotationGroup annotationGroup in annotationShaderGroup.Buffers)
+                        {
+                            foreach (AnnotationVariable annotationVariable in annotationGroup.AnnotationVariables)
                             {
-                                annotationVariable.UpdateBuffer();
+                                annotationVariable.UpdateBuffer(false);
                             }
+                            annotationGroup.MarshalBuffer(ViewportHost, isStandard);
                         }
                     }
                 }
+
+                ViewportHost.SetModel(SelectedModel?.Path ?? Workspace.Models[0].Path);
+                ViewportHost.SetCameraOffset(CameraOffset);
+
+                RaisePropertyChanged("SelectedModel");
             }
-
-            NativeMethods.SetModel(SelectedModel?.Path ?? Workspace.Models[0].Path);
-            NativeMethods.SetCameraOffset(CameraOffset);
-
-            RaisePropertyChanged("SelectedModel");
         }
 
         private void RaiseLoaded()
         {
             if (((ModernWindow)Application.Current.MainWindow).ContentSource.ToString() == "/ShaderBox;component/Views/ShaderEditorPage.xaml")
             {
-                UpdateShaderViewport();
+                ((App)Application.Current).ActiveViewport = this;
             }
         }
 
@@ -264,6 +281,7 @@ namespace ShaderBox.ViewModels
                 e.Shader.Move(Workspace);
             }
         }
+
         private void SetNewShaderName(ShaderNameChangedEventArgs e)
         {
             string newValue = e.NewValue;
@@ -417,18 +435,33 @@ namespace ShaderBox.ViewModels
 
                     if (SelectedShaderGroup.ShaderGroupType == ShaderGroupType.Standard)
                     {
-                        NativeMethods.UpdateShaders(
-                        SelectedShaderGroup.UniqueName,
-                        shaderLocations[0] ?? "", shaderLocations[1] ?? "", shaderLocations[2] ?? "", shaderLocations[3] ?? "", shaderLocations[4] ?? "");
-
-                        NativeMethods.SetTopology((int)SelectedShaderGroup.Topology);
-                        NativeMethods.SetRasterizerState((int)SelectedShaderGroup.CullMode, (int)SelectedShaderGroup.FillMode);
+                        if(SelectedShaderGroup == _settedGroup)
+                        {
+                            ViewportHost.UpdateShaders(
+                                shaderLocations[0] ?? "", shaderLocations[1] ?? "", shaderLocations[2] ?? "", shaderLocations[3] ?? "", shaderLocations[4] ?? "");
+                        }
+                        else
+                        {
+                            // Workaround so we don't update the wrong shader, if shaders wasn't in cache we load everything double, not good
+                            ViewportHost.SetShaders(
+                                shaderLocations[0] ?? "", shaderLocations[1] ?? "", shaderLocations[2] ?? "", shaderLocations[3] ?? "", shaderLocations[4] ?? "");
+                            ViewportHost.UpdateShaders(
+                                shaderLocations[0] ?? "", shaderLocations[1] ?? "", shaderLocations[2] ?? "", shaderLocations[3] ?? "", shaderLocations[4] ?? "");
+                            ViewportHost.SetTopology((int)SelectedShaderGroup.Topology);
+                            ViewportHost.SetRasterizerState((int)SelectedShaderGroup.CullMode, (int)SelectedShaderGroup.FillMode);
+                        }
                     }
                     else
                     {
-                        NativeMethods.UpdateShadersPP(
-                        SelectedShaderGroup.UniqueName,
-                        shaderLocations[0] ?? "", shaderLocations[4] ?? "");
+                        if (SelectedShaderGroup == _settedGroup)
+                        {
+                            ViewportHost.UpdatePPShader(shaderLocations[4] ?? "");
+                        }
+                        else
+                        {
+                            ViewportHost.SetPPShader(shaderLocations[4] ?? "");
+                            ViewportHost.UpdatePPShader(shaderLocations[4] ?? "");
+                        }
                     }
                     try
                     {
@@ -447,8 +480,15 @@ namespace ShaderBox.ViewModels
                             }
                         }
 
-                        NativeMethods.RenderThumbnailActive(Path.GetFullPath($"{MainWindowPageViewModel.ShaderBoxResourcesFolderLocation}{SelectedShaderGroup.UniqueName}/preview.png"));
-                        SelectedShaderGroup.Image = null;
+                        ViewportHost.RenderThumbnail(Path.GetFullPath($"{MainWindowPageViewModel.ShaderBoxResourcesFolderLocation}{SelectedShaderGroup.UniqueName}/preview.png"),
+                            async () =>
+                            {
+                                await Application.Current.Dispatcher.InvokeAsync(() =>
+                                {
+                                    _selectedShaderGroup.Image = null;
+                                    ViewportHost.PopCallbackRenderThumbnail();
+                                });
+                            });
                     }
                     catch (Exception)
                     {

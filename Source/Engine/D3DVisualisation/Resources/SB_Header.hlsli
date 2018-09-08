@@ -14,6 +14,12 @@ cbuffer BaseConstantBufferObject : register(b1)
 	float4x4 gWorldInverse : WORLDINVERSE;
 };
 
+struct InputPP
+{
+	float4 Position : SV_Position;
+	float2 TexCoord : TEXCOORD0;
+};
+
 SamplerState samLinearWrap : register(s0);
 SamplerState samLinearMirror : register(s1);
 SamplerState samLinearClamp : register(s2);

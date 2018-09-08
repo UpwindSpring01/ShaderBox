@@ -5,10 +5,10 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);..\..\External\DirectXMesh\DirectXMesh\;..\..\External\DirectXTex\DirectXTex\;..\..\External\DirectXTK\Inc\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(SolutionDir)External\DirectXMesh\DirectXMesh\;$(SolutionDir)External\DirectXTex\DirectXTex\;$(SolutionDir)External\DirectXTK\Inc\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);..\..\External\DirectXMesh\DirectXMesh\Bin\Desktop_2017_Win10\x64\Debug\DirectXMesh.lib;..\..\External\DirectXTex\DirectXTex\Bin\Desktop_2017_Win10\x64\Debug\DirectXTex.lib;..\..\External\DirectXTK\Bin\Desktop_2017_Win10\x64\Debug\DirectXTK.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)External\DirectXMesh\DirectXMesh\Bin\Desktop_2017_Win10\x64\Debug\DirectXMesh.lib;$(SolutionDir)External\DirectXTex\DirectXTex\Bin\Desktop_2017_Win10\x64\Debug\DirectXTex.lib;$(SolutionDir)External\DirectXTK\Bin\Desktop_2017_Win10\x64\Debug\DirectXTK.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

@@ -355,7 +355,7 @@
                         </GridSplitter.Visibility>
                     </GridSplitter>
                     <Expander Grid.Row="2" Header="Viewport" x:Name="viewportExpander" ExpandDirection="Up" IsExpanded="True" Collapsed="viewportExpander_Collapsed" Expanded="viewportExpander_Expanded">
-                        <control:ViewportControl PageUri="/ShaderBox;component/Views/ShaderEditorPage.xaml"/>
+                        <control:ViewportControl />
                     </Expander>
                 </Grid>
             </Expander>

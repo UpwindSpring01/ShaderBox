@@ -1,8 +1,11 @@
 ﻿using FirstFloor.ModernUI.Windows.Controls;
 using ShaderBox.General;
+using ShaderBox.Views;
+using ShaderBoxBridge;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Interop;
 using System.Windows.Media;
 
@@ -11,127 +14,60 @@ namespace ShaderBox.UserControls
     /// <summary>
     /// Interaction logic for ViewportControl.xaml
     /// </summary>
-    public partial class ViewportControl : UserControl
+    public partial class ViewportControl : Border
     {
-        private TimeSpan _lastRender;
-        private bool _lastVisible;
-
-        private bool _forceSurfaceUpdate = false;
-
-        private bool _hostLoaded = false;
-
-        public string PageUri
+        public ViewportHost ViewportHost
         {
-            get { return (string)GetValue(PageUriProperty); }
-            set { SetValue(PageUriProperty, value); }
+            get { return (ViewportHost)GetValue(ViewportHostProperty); }
+            set { SetValue(ViewportHostProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for PageUri.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty PageUriProperty =
-            DependencyProperty.Register("PageUri", typeof(string), typeof(ViewportControl), new PropertyMetadata(""));
-
+        public static readonly DependencyProperty ViewportHostProperty =
+            DependencyProperty.Register("ViewportHost", typeof(ViewportHost),
+                typeof(ViewportControl), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None));
 
 
         public ViewportControl()
         {
             InitializeComponent();
-
-            host.Loaded += Init;
-            host.SizeChanged += Host_SizeChanged;
+            Loaded += Border_Loaded;
+            Application.Current.MainWindow.Closing += (s, e) =>
+            {
+                Child = null;
+                ViewportHost.Dispose();
+                ViewportHost = null;
+            };
         }
 
-        private void Host_Unloaded(object sender, RoutedEventArgs e)
+        private async void ViewportWindowDestroyed()
         {
-            if (_hostLoaded && ((ModernWindow)Application.Current.MainWindow).ContentSource.ToString() != PageUri)
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                _hostLoaded = false;
-                _lastVisible = false;
-
-                InteropImage.OnRender -= DoRender;
-                CompositionTarget.Rendering -= CompositionTarget_Rendering;
-
-                host.Loaded += Init;
-            }
+                ++((MainWindowPage)Application.Current.MainWindow).WindowsClosed;
+            });
         }
 
-        private void DoRender(IntPtr surface, bool isNewSurface)
+        private async void ViewportWindowCreated()
         {
-            if (((App)Application.Current).EngineInitialized)
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                if (_forceSurfaceUpdate)
-                {
-                    isNewSurface = true;
-                    _forceSurfaceUpdate = false;
-                }
-                NativeMethods.InvokeWithDllProtection(() => NativeMethods.Render(surface, isNewSurface));
-            }
+                Child = ViewportHost;
+            });
         }
 
-        private void Init(object sender, RoutedEventArgs e)
+        private void Border_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!_hostLoaded && ((ModernWindow)Application.Current.MainWindow).ContentSource.ToString() == PageUri)
-            {
-                _hostLoaded = true;
+            Loaded -= Border_Loaded;
 
-                host.Loaded -= Init;
-                _forceSurfaceUpdate = true;
-                InteropImage.WindowOwner = (new WindowInteropHelper(Application.Current.MainWindow)).Handle;
-                InteropImage.OnRender = DoRender;
+            Binding binding = new Binding();
+            binding.Path = new PropertyPath("ViewportHost");
+            binding.Source = DataContext;
+            binding.Mode = BindingMode.OneWayToSource;
+            BindingOperations.SetBinding(this, ViewportHostProperty, binding);
 
-                host.Unloaded += Host_Unloaded;
-
-                Host_SizeChanged(null, null);
-                InteropImage.RequestRender();
-            }
-        }
-
-        void CompositionTarget_Rendering(object sender, EventArgs e)
-        {
-            RenderingEventArgs args = (RenderingEventArgs)e;
-
-            // It's possible for Rendering to call back twice in the same frame 
-            // so only render when we haven't already rendered in this frame.
-            if (_lastRender != args.RenderingTime)
-            {
-                InteropImage.RequestRender();
-                _lastRender = args.RenderingTime;
-            }
-        }
-
-        private void Host_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            double dpiScale = 1.0; // default value for 96 dpi
-
-            // determine DPI
-            // (as of .NET 4.6.1, this returns the DPI of the primary monitor, if you have several different DPIs)
-            var hwndTarget = PresentationSource.FromVisual(this).CompositionTarget as HwndTarget;
-            if (hwndTarget != null)
-            {
-                dpiScale = hwndTarget.TransformToDevice.M11;
-            }
-
-            int surfWidth = (int)(host.ActualWidth < 0 ? 0 : Math.Ceiling(host.ActualWidth * dpiScale));
-            int surfHeight = (int)(host.ActualHeight < 0 ? 0 : Math.Ceiling(host.ActualHeight * dpiScale));
-
-            // Notify the D3D11Image of the pixel size desired for the DirectX rendering.
-            // The D3DRendering component will determine the size of the new surface it is given, at that point.
-            InteropImage.SetPixelSize(surfWidth, surfHeight);
-
-            // Stop rendering if the D3DImage isn't visible - currently just if width or height is 0
-            // TODO: more optimizations possible (scrolled off screen, etc...)
-            bool isVisible = (surfWidth != 0 && surfHeight != 0);
-            if (_lastVisible != isVisible)
-            {
-                _lastVisible = isVisible;
-                if (_lastVisible)
-                {
-                    CompositionTarget.Rendering += CompositionTarget_Rendering;
-                }
-                else
-                {
-                    CompositionTarget.Rendering -= CompositionTarget_Rendering;
-                }
-            }
+            ViewportHost = new ViewportHost(ViewportWindowCreated);
+            ViewportHost.SetUnregisteredCallback(ViewportWindowDestroyed);
+            ++((MainWindowPage)Application.Current.MainWindow).WindowsToClose;
         }
     }
 }

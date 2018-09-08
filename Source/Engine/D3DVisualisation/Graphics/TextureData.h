@@ -1,26 +1,26 @@
 #pragma once
-class TextureData
+namespace SpringWindEngine
 {
-public:
-	TextureData(ID3D11Resource* pTexture, ID3D11ShaderResourceView* pTextureShaderResourceView);
-	~TextureData(void);
+	class TextureData
+	{
+	public:
+		TextureData(size_t width, size_t height, ID3D11ShaderResourceView* pTextureShaderResourceView);
+		~TextureData(void);
 
-	ID3D11Resource* GetResource() const { return m_pTexture; }
-	ID3D11ShaderResourceView* GetShaderResourceView() const { return m_pTextureShaderResourceView; }
-	XMFLOAT2 GetDimension() const { return m_Dimension; }
+		ID3D11ShaderResourceView* GetShaderResourceView() const { return m_pTextureShaderResourceView; }
+		XMFLOAT2 GetDimension() const { return m_Dimension; }
 
-private:
+	private:
 
-	ID3D11Resource *m_pTexture;
-	ID3D11ShaderResourceView *m_pTextureShaderResourceView;
-	XMFLOAT2 m_Dimension;
+		ID3D11ShaderResourceView *m_pTextureShaderResourceView;
+		XMFLOAT2 m_Dimension;
 
-private:
-	// -------------------------
-	// Disabling default copy constructor and default 
-	// assignment operator.
-	// -------------------------
-	TextureData(const TextureData& t) = delete;
-	TextureData& operator=(const TextureData& t) = delete;
-};
-
+	private:
+		// -------------------------
+		// Disabling default copy constructor and default 
+		// assignment operator.
+		// -------------------------
+		TextureData(const TextureData& t) = delete;
+		TextureData& operator=(const TextureData& t) = delete;
+	};
+}

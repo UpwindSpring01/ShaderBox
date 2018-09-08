@@ -14,13 +14,13 @@
           <Variables>
             <Variable Name="RADIUS" DataType="Float" IsSNorm="false" IsUNorm="true" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="0" Size="4">
               <Value>
-                <Value_d>0</Value_d>
+                <Value_d>0.5</Value_d>
               </Value>
               <AnnotationKeywords />
             </Variable>
             <Variable Name="SOFTNESS" DataType="Float" IsSNorm="false" IsUNorm="true" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="4" Size="4">
               <Value>
-                <Value_d>0</Value_d>
+                <Value_d>0.2</Value_d>
               </Value>
               <AnnotationKeywords />
             </Variable>
@@ -42,12 +42,6 @@
   <HasHullDomainShader>false</HasHullDomainShader>
   <HasGeometryShader>false</HasGeometryShader>
   <SelectedModel>0</SelectedModel>
-  <Shaders>
-    <IsBuiltIn>false</IsBuiltIn>
-    <ShaderType>Vertex</ShaderType>
-    <Name>vs.hlsl</Name>
-    <FileLocation>./Resources/PP_Sepia_Vignette_2017_1_22-23_46/vs.hlsl</FileLocation>
-  </Shaders>
   <Shaders>
     <IsBuiltIn>false</IsBuiltIn>
     <ShaderType>Pixel</ShaderType>

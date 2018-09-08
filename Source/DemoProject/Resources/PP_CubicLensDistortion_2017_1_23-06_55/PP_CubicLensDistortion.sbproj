@@ -13,7 +13,9 @@
           <BufferSize>0</BufferSize>
           <Variables>
             <Variable Name="myTexture" DataType="Texture" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="false" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="true" Dimension="-1" Offset="0" Size="0">
-              <Value />
+              <Value>
+                <Path>./Resources/.Data/Images/plus.png</Path>
+              </Value>
               <AnnotationKeywords />
             </Variable>
           </Variables>
@@ -24,7 +26,7 @@
           <Variables>
             <Variable Name="gLensDistortion" DataType="Float" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="0" Size="4">
               <Value>
-                <Value_d>0</Value_d>
+                <Value_d>25.700000000000003</Value_d>
               </Value>
               <AnnotationKeywords>
                 <KVPairSerializable>
@@ -43,7 +45,7 @@
             </Variable>
             <Variable Name="gCubicDistortion" DataType="Float" IsSNorm="false" IsUNorm="false" Rows="0" Columns="0" IsScalar="true" IsVector="false" IsMatrix="false" IsArray="false" IsTexture="false" Dimension="-1" Offset="4" Size="4">
               <Value>
-                <Value_d>0</Value_d>
+                <Value_d>-50</Value_d>
               </Value>
               <AnnotationKeywords>
                 <KVPairSerializable>
@@ -72,12 +74,6 @@
   <HasHullDomainShader>false</HasHullDomainShader>
   <HasGeometryShader>false</HasGeometryShader>
   <SelectedModel>0</SelectedModel>
-  <Shaders>
-    <IsBuiltIn>false</IsBuiltIn>
-    <ShaderType>Vertex</ShaderType>
-    <Name>vs.hlsl</Name>
-    <FileLocation>./Resources/PP_CubicLensDistortion_2017_1_23-06_55/vs.hlsl</FileLocation>
-  </Shaders>
   <Shaders>
     <IsBuiltIn>false</IsBuiltIn>
     <ShaderType>Pixel</ShaderType>

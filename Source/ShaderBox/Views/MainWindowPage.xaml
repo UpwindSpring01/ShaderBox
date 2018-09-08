@@ -7,12 +7,11 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:mui="http://firstfloorsoftware.com/ModernUI" 
         Title="ShaderBox - Kevin Loddewykx"
-        ContentSource="{Binding SelectedPage, Mode=TwoWay}" 
+        ContentSource="{Binding SelectedPage, Mode=TwoWay}"
         ResizeMode="CanResize" 
         IsTitleVisible="True" 
         WindowStyle="None"
         x:Name="root"
-        Closing="ModernWindow_Closing"
         xmlns:mvvm="http://prismlibrary.com/"
         mvvm:ViewModelLocator.AutoWireViewModel="True"
                  >

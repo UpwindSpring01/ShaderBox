@@ -58,7 +58,7 @@ char* CompileShader(const char* content, const char* shaderTarget, const char* s
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 		std::wstring wide = converter.from_bytes(path);
 
-		HRESULT hr = D3DWriteBlobToFile(pBlob, wide.c_str(), true);
+		hr = D3DWriteBlobToFile(pBlob, wide.c_str(), true);
 		if (FAILED(hr))
 		{
 			std::wstring errorMsg = L"Failed to save compiled shader to disk.\nIf this keeps occuring contact a developer";

@@ -18,7 +18,9 @@
 #include <map>
 #include <unordered_map>
 #include <stack>
-#include <future>
+#include <mutex>
+#include <thread>
+#include <unordered_set>
 
 // DirectX
 #include <dxgi1_5.h>
@@ -48,7 +50,6 @@
 
 #include <Wincodec.h>
 
-
 using namespace DirectX;
 
 template<class T>
@@ -61,32 +62,39 @@ inline void SafeRelease(T& ppT)
 	}
 }
 
-inline bool XMFloat4Equals(const XMFLOAT4& a, const XMFLOAT4& b)
+template<class T>
+inline void CheckedRelease(T& ppT)
 {
-	return (a.x == b.x) && (a.y == b.y) && (a.z == b.z) && (a.w == b.w);
+	if (ppT)
+	{
+		ppT->Release();
+	}
 }
 
-#include "../Extern/DirectXMesh/Utilities/WaveFrontReader.h"
+#include "Extern/DirectXMesh/Utilities/WaveFrontReader.h"
 
-#include "TypeID.h"
+#include "Base/TypeID.h"
 
-#include "GameTime.h"
-#include "../Helpers/StructHelpers.h"
-#include "../Component/TransformComponent.h"
-#include "../Content/ContentManager.h"
-#include "../SceneGraph/GameScene.h"
-#include "../SceneGraph/GameObject.h"
-//#include "MaterialManager.h"
+#include "Base/CustomSTL/Unsafe_Shared_Ptr.h"
 
-#include "../Mesh/Mesh.h"
-#include "../Content/MeshLoader.h"
-#include "../Content/EffectLoader.h"
-#include "../Content/TextureDataLoader.h"
-#include "../Graphics/Material.h"
-#include "../Component/MeshDrawComponent.h"
-#include "SpringWind.h"
+
+#include "Base/GameTime.h"
+#include "Helpers/StructHelpers.h"
+#include "Helpers/EffectStructs.h"
+#include "Helpers/MathHelpers.h"
+#include "Component/TransformComponent.h"
+#include "Component/CameraComponent.h"
+#include "Content/ContentManager.h"
+#include "SceneGraph/GameScene.h"
+#include "SceneGraph/GameObject.h"
+#include "Mesh/Mesh.h"
+#include "Graphics/TextureData.h"
+#include "Graphics/Material.h"
+#include "Component/MeshDrawComponent.h"
+#include "Base/SpringWind.h"
+
 #ifdef _DEBUG
-#include "../DebugOnly/Logger.h"
+#include "DebugOnly/Logger.h"
 #define CHECK_HR(x) { \
 	long check_HR_Line = __LINE__; \
 	wchar_t check_HR_Func[sizeof(__func__)]; \

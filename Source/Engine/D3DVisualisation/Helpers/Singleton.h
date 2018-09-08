@@ -1,29 +1,31 @@
 #pragma once
-
-template<class T>
-class Singleton
+namespace SpringWindEngine
 {
-public:
-	static T* GetInstance() 
+	template<class T>
+	class Singleton
 	{
-		return m_pInstance;
+	public:
+		static T* GetInstance()
+		{
+			return m_pInstance;
+		};
+
+		static void CreateInstance()
+		{
+			assert(m_pInstance == nullptr);
+			m_pInstance = new T();
+		}
+
+		static void DestroyInstance()
+		{
+			assert(m_pInstance != nullptr);
+			delete m_pInstance;
+			m_pInstance = nullptr;
+		}
+	private:
+		static T* m_pInstance;
 	};
 
-	static void CreateInstance()
-	{
-		assert(m_pInstance == nullptr);
-		m_pInstance = new T();
-	}
-
-	static void DestroyInstance()
-	{
-		assert(m_pInstance != nullptr);
-		delete m_pInstance;
-		m_pInstance = nullptr;
-	}
-private:
-	static T* m_pInstance;
-};
-
-template<class T>
-T* Singleton<T>::m_pInstance = nullptr;
+	template<class T>
+	T* Singleton<T>::m_pInstance = nullptr;
+}

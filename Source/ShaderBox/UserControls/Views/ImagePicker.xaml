@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              xmlns:mvvm="http://prismlibrary.com/"
         mvvm:ViewModelLocator.AutoWireViewModel="True">
-    <ComboBox ItemsSource="{Binding Images}" Height="100" SelectedItem="{Binding SelectedImage, Mode=TwoWay}" ItemTemplateSelector="{com:ComboBoxTemplateSelectorExtension
-        SelectedItemTemplate={StaticResource DropDownSelectedImage},
-        DropdownItemsTemplate={StaticResource DropDownImage}}" MaxDropDownHeight="391" ScrollViewer.CanContentScroll="False" />
+    <ComboBox x:Name="cbx"  ItemsSource="{Binding Images}" Height="100" SelectedItem="{Binding SelectedImage, Mode=TwoWay}" ItemTemplateSelector="{com:ComboBoxTemplateSelectorExtension
+        SelectedItemTemplate={StaticResource DropDownSelectedImage}, DropdownItemsTemplate={StaticResource DropDownImage}}" PreviewKeyUp="ComboBox_PreviewKeyUp"
+              MaxDropDownHeight="391" ScrollViewer.CanContentScroll="False" />
 </UserControl>

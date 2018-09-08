@@ -2,14 +2,20 @@
 
 #include "ContentManager.h"
 
-std::vector<BaseLoader*> ContentManager::m_Loaders = std::vector<BaseLoader*>();
+#include "MeshLoader.h"
+#include "TextureDataLoader.h"
 
-void ContentManager::AddLoader(BaseLoader* loader)
+using namespace SpringWindEngine;
+
+std::vector<BaseLoader*> SpringWindEngine::ContentManager::m_Loaders = std::vector<BaseLoader*>();
+
+void SpringWindEngine::ContentManager::Initialize()
 {
-	m_Loaders.push_back(loader);
+	m_Loaders.push_back(new MeshLoader());
+	m_Loaders.push_back(new TextureDataLoader());
 }
 
-void ContentManager::Release()
+void SpringWindEngine::ContentManager::Shutdown()
 {
 	for (BaseLoader* ldr : m_Loaders)
 	{
@@ -17,4 +23,9 @@ void ContentManager::Release()
 	}
 
 	m_Loaders.clear();
+}
+
+SpringWindEngine::MeshLoader* SpringWindEngine::ContentManager::GetMeshLoader()
+{
+	return static_cast<MeshLoader*>(m_Loaders[0]);
 }

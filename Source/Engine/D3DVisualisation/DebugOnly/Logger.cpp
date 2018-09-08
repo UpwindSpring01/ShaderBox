@@ -4,10 +4,10 @@
 #include <sstream>
 #include <iostream>
 
-HANDLE Logger::m_ConsoleHandle = nullptr;
-wchar_t* Logger::m_ConvertBuffer = new wchar_t[m_ConvertBufferSize];
+HANDLE SpringWindEngine::Logger::m_ConsoleHandle = nullptr;
+wchar_t* SpringWindEngine::Logger::m_ConvertBuffer = new wchar_t[m_ConvertBufferSize];
 
-void Logger::LogHRESULT(HRESULT hr, const std::wstring& origin)
+void SpringWindEngine::Logger::LogHRESULT(HRESULT hr, const std::wstring& origin)
 {
 	if(FAILED(hr))
 	{
@@ -42,12 +42,12 @@ void Logger::LogHRESULT(HRESULT hr, const std::wstring& origin)
 	}
 }
 
-void Logger::LogError(const std::wstring& origin)
+void SpringWindEngine::Logger::LogError(const std::wstring& origin)
 {
 	Log(LogLevel::Error, origin);
 }
 
-void Logger::LogFormat(const LogLevel level, const wchar_t* format, ...)
+void SpringWindEngine::Logger::LogFormat(const LogLevel level, const wchar_t* format, ...)
 {
 	va_list ap;
 	va_start(ap, format);
@@ -56,7 +56,7 @@ void Logger::LogFormat(const LogLevel level, const wchar_t* format, ...)
 	Log(level, std::wstring(&m_ConvertBuffer[0]));
 }
 
-void Logger::Log(const LogLevel level, const std::wstring& msg)
+void SpringWindEngine::Logger::Log(const LogLevel level, const std::wstring& msg)
 {
 	if(m_ConsoleHandle == nullptr)
 	{
@@ -96,7 +96,7 @@ void Logger::Log(const LogLevel level, const std::wstring& msg)
 	}
 }
 
-void Logger::CreateConsole()
+void SpringWindEngine::Logger::CreateConsole()
 {
 	if(AllocConsole())
 	{

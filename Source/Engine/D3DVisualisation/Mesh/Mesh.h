@@ -1,37 +1,33 @@
 #pragma once
 
-struct vertex;
-
-class Mesh
+namespace SpringWindEngine
 {
-public:
-	Mesh(std::vector<WaveFrontReader<unsigned int>::Vertex> vertices, std::vector<unsigned int> indices, UINT elements);
-	virtual ~Mesh();
+	struct vertex;
 
-	void SwapData(std::vector<WaveFrontReader<unsigned int>::Vertex> vertices, std::vector<unsigned int> indices, UINT elements);
-	void SetEffect(Effect* effect);
-	void UpdateBuffers();
-	void Draw() const;
-private:
-	bool HasElement(ILSemantic element) { return (m_HasElement&element) > 0 ? true : false; }
+	class Mesh
+	{
+	public:
+		Mesh(std::vector<WaveFrontReader<unsigned int>::Vertex> vertices, std::vector<unsigned int> indices, UINT elements);
+		virtual ~Mesh();
 
-	void CreateVertexBuffer();
-	void CreateIndexBuffer(uint32_t* indices, size_t count);
+		Unsafe_Shared_Ptr<ID3D11Buffer> GetVertexBuffer(InputLayoutDesc* pInputLayoutDesc);
+		Unsafe_Shared_Ptr<std::pair<ID3D11Buffer*, UINT>> GetIndexBuffer(D3D11_PRIMITIVE_TOPOLOGY topology);
 
-	std::vector<WaveFrontReader<unsigned int>::Vertex> m_Vertices;
-	std::vector<unsigned int> m_Indices;
-	UINT m_IndexCount = 0;
+		void UnloadUnusedBuffers();
+	private:
+		bool HasElement(ILSemantic element) { return (m_HasElement & element) != 0; }
 
-	// For making it easier to swap models, also keep inside mesh class reference to effect,
-	// Should be only part of MeshDrawComponent its material
-	Effect* m_pEffect = nullptr;
+		std::vector<WaveFrontReader<unsigned int>::Vertex> m_Vertices;
+		std::vector<unsigned int> m_Indices;
 
-	ID3D11Buffer* m_pVertexBuffer = nullptr;
-	ID3D11Buffer* m_pIndexBuffer = nullptr;
-	UINT m_HasElement = 0;
-	
-	static XMFLOAT4 m_DefaultColor;
-	static XMFLOAT4 m_DefaultFloat4;
-	static XMFLOAT3 m_DefaultFloat3;
-	static XMFLOAT2 m_DefaultFloat2;
-};
+		std::unordered_map<InputLayoutDesc*, Unsafe_Shared_Ptr<ID3D11Buffer>> m_VertexBufferPtrMap;
+		std::unordered_map<D3D11_PRIMITIVE_TOPOLOGY, Unsafe_Shared_Ptr<std::pair<ID3D11Buffer*, UINT>>> m_IndexBufferPtrMap;
+
+		UINT m_HasElement = 0;
+
+		static XMFLOAT4 m_DefaultColor;
+		static XMFLOAT4 m_DefaultFloat4;
+		static XMFLOAT3 m_DefaultFloat3;
+		static XMFLOAT2 m_DefaultFloat2;
+	};
+}

@@ -4,13 +4,13 @@
 #include "../Component/TransformComponent.h"
 #include "../Component/BaseComponent.h"
 
-GameObject::GameObject()
+SpringWindEngine::GameObject::GameObject()
 {
 	m_pTransComp = new TransformComponent();
 	AddComponent(m_pTransComp);
 }
 
-GameObject::~GameObject()
+SpringWindEngine::GameObject::~GameObject()
 {
 	for(BaseComponent* pComp : m_pBaseCompArr)
 	{
@@ -18,31 +18,31 @@ GameObject::~GameObject()
 	}
 }
 
-void GameObject::RootDraw(const GameContext& gameContext)
+void SpringWindEngine::GameObject::RootDraw(const EngineContext& engineContext)
 {
 	for(BaseComponent* pComp : m_pBaseCompArr)
 	{
-		pComp->Draw(gameContext);
+		pComp->Draw(engineContext);
 	}
-}
-
-void GameObject::RootPostDraw()
-{
-	for(BaseComponent* pComp : m_pBaseCompArr)
+	for (TransformComponent* pTransform : m_pTransComp->GetChildren())
 	{
-		pComp->PostDraw();
+		pTransform->GetGameObject()->RootDraw(engineContext);
 	}
 }
 
-void GameObject::RootUpdate()
+void SpringWindEngine::GameObject::RootUpdate()
 {
 	for(BaseComponent* pComp : m_pBaseCompArr)
 	{
 		pComp->Update();
 	}
+	for (TransformComponent* pTransform : m_pTransComp->GetChildren())
+	{
+		pTransform->GetGameObject()->RootUpdate();
+	}
 }
 
-void GameObject::AddComponent(BaseComponent* pComp)
+void SpringWindEngine::GameObject::AddComponent(BaseComponent* pComp)
 {
 #ifdef _DEBUG
 	if(dynamic_cast<Component<TransformComponent>*>(pComp) != nullptr && m_pBaseCompArr.size() != 0)
@@ -65,5 +65,13 @@ void GameObject::AddComponent(BaseComponent* pComp)
 	}
 #endif // _DEBUG
 	pComp->m_pGameObject = this;
-	m_pBaseCompArr.emplace_back(pComp);
+	m_pBaseCompArr.push_back(pComp);
+}
+
+void SpringWindEngine::GameObject::SetTransformDirty()
+{
+	for (BaseComponent* pComp : m_pBaseCompArr)
+	{
+		pComp->SetTransformDirty();
+	}
 }

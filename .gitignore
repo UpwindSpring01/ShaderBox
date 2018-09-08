@@ -48,3 +48,5 @@ Source/DemoProject/obj/
 Source/bin/
 Source/.vs/
 Source/Engine/ShaderRuntimeCompiler/bin/
+Source/NativeBridge/x64/
+Source/ShaderBoxBridge/x64/

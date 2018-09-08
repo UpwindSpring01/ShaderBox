@@ -2,20 +2,21 @@
 #include "ContentLoader.h"
 #include "..\Graphics\TextureData.h"
 
-class TextureDataLoader : public ContentLoader<TextureData>
+namespace SpringWindEngine
 {
-public:
-	TextureDataLoader(void);
-	~TextureDataLoader(void);
-
-	TextureData* Load(const std::initializer_list<std::wstring>& assetFiles) override;
-	void Update(const std::initializer_list<std::wstring>& /*assetFiles*/, TextureData* /*content*/) override {};
-private:
-// -------------------------
-// Disabling default copy constructor and default 
-// assignment operator.
-// -------------------------
-TextureDataLoader(const TextureDataLoader& yRef);									
-TextureDataLoader& operator=(const TextureDataLoader& yRef);
-};
-
+	class TextureDataLoader : public ContentLoader<TextureData>
+	{
+	public:
+		Unsafe_Shared_Ptr<TextureData> Load(const std::wstring& assetFile) override;
+	private:
+		friend class ContentManager;
+		TextureDataLoader();
+		~TextureDataLoader();
+		// -------------------------
+		// Disabling default copy constructor and default 
+		// assignment operator.
+		// -------------------------
+		TextureDataLoader(const TextureDataLoader& yRef) = delete;
+		TextureDataLoader& operator=(const TextureDataLoader& yRef) = delete;
+	};
+}

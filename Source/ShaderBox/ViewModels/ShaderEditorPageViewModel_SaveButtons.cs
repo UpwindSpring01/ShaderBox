@@ -2,6 +2,7 @@
 using ShaderBox.General;
 using ShaderBox.Models;
 using System.IO;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ShaderBox.ViewModels
@@ -14,7 +15,7 @@ namespace ShaderBox.ViewModels
         public ICommand RaiseShaderNameChangedCommand { get; set; }
 
 
-       // public ICommand RaiseSaveShaderGroupAsCommand { get; set; }
+        // public ICommand RaiseSaveShaderGroupAsCommand { get; set; }
 
         public ICommand RaiseSaveShaderPropertiesCommand { get; private set; }
 
@@ -58,11 +59,18 @@ namespace ShaderBox.ViewModels
 
         private void RaiseSaveShaderProperties()
         {
-            if(SelectedShaderGroup != null)
+            if (SelectedShaderGroup != null)
             {
                 SelectedShaderGroup.Save(Workspace);
-                NativeMethods.RenderThumbnailActive(Path.GetFullPath($"{MainWindowPageViewModel.ShaderBoxResourcesFolderLocation}{SelectedShaderGroup.UniqueName}/preview.png"));
-                SelectedShaderGroup.Image = null;
+                ViewportHost.RenderThumbnail(Path.GetFullPath($"{MainWindowPageViewModel.ShaderBoxResourcesFolderLocation}{SelectedShaderGroup.UniqueName}/preview.png"),
+                    async () =>
+                    {
+                        await Application.Current.Dispatcher.InvokeAsync(() =>
+                        {
+                            SelectedShaderGroup.Image = null;
+                            ViewportHost.PopCallbackRenderThumbnail();
+                        });
+                    });
             }
         }
     }
