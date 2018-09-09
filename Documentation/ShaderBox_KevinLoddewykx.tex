@@ -177,13 +177,13 @@ The app has three tabs each with their own subpanels: Library \bracket{\ref{subs
 
 \newpage
 \subsection{Planning}
-Currently I am working on \textbf{rewriting} how the \textbf{3D viewport} is hooked up with the user interface. At the moment it is using the \href{https://github.com/Microsoft/WPFDXInterop}{WPF DirectX Extensions} project from Microsoft, which allows you to render with DirectX 11 to a image hosted inside WPF. The problem with this approach is that WPF handles internally when a new frame needs to be rendered and you need to use a Flush call on the DeviceContext to have the content appear, which is a non-blocking call and causes flickering. Also all the input needs to be captured inside the WPF application and manually send to the engine and the rendering needs to run on the UI thread.
+Currently I am working on creating a UI design document. Describing the future UI layout, taking into account al the planned and backlogged feautures and extensibility.
 \par
 Planned
 \begin{itemize}[noitemsep]
 	\item Docking manager + multiple text editors
 	\item Improve integration of HlslTools: folding, code completion, ...
-	\item C++/CLI project instead of marshalling
+	\item C++/CLI project instead of marshalling for ShaderCompiler
 \end{itemize}
 
 Backlogged
@@ -205,7 +205,7 @@ Backlogged
 \subsection{Workings}
 When creating a new shader you can choose which type of shader you want to make, the passes it will need, the topology and set up the rasterizer. Afterwards Shader Box will initialize a new shader project with for each choosen pass a file. The user can always add extra header files which can be used locally so only the project can access it, or set it as a shared header so all the projects can include it. There is one built-in shared header which includes the samplerstates which the engine supports, two cbuffers one for the camera information which changes every frame and one for the per object information (currently only one object per scene). And a reserved slot for a texture, for when creating a post processing shader.
 \par
-After writing your shader you can click compile or build. Compile will only compile the active shader pass and output the found errors, while build will compile the entire project to precompiled shader files and create a properties panel, for controlling the parameters. The look of the properties panel can be controlled by metadata, using the same syntax as in FX Composer. Finding all this information is done by calling the SyntaxFactory.ParseSyntaxTree(...) method of HLSL Tools on each pass seperatly while passing the shader content. Next Shader Box will go over each SyntaxTree and extract the necessary data for creating the properties, for each found cbuffer a byte array is created which stores the settings which needs to be passed to the GPU. Every variable gets a offset to where it value needs to be stored in the array, in conformance with the HLSL packing needs. Every time the user updates a variable this byte array, which is defined in C\#, gets marshalled to the C++ engine.
+After writing your shader you can click compile or build. Compile will only compile the active shader pass and output the found errors, while build will compile the entire project to precompiled shader files and create a properties panel, for controlling the parameters. The look of the properties panel can be controlled by metadata, using the same syntax as in FX Composer. Finding all this information is done by calling the SyntaxFactory.ParseSyntaxTree(...) method of HLSL Tools on each pass seperatly while passing the shader content. Next Shader Box will go over each SyntaxTree and extract the necessary data for creating the properties, for each found cbuffer a byte array is created which stores the settings which needs to be passed to the GPU. Every variable gets a offset to where it value needs to be stored in the array, in conformance with the HLSL packing needs. Every time the user updates a variable this byte array, which is defined in C\#, goes through a C++/CLI project to the C++ engine.
 
 \newpage
 \subsection{Tab: Library}\label{subsec:tab_l}
@@ -248,7 +248,9 @@ If you want to apply the shader to an object. Requires a vertex and pixel shader
 \begin{itemize}
 \item Post processing
 \end{itemize}
-When you want to write a Post processing effect, requires a vertex shader and pixel shader, the other shader types are disabled. 
+When you want to write a Post processing effect, only pixel shader is required and the other shader types are disabled.
+\par
+A vertex shader is not required, due to the engine providing this. The engine internally uses a vertex shader utilizing the Fullscreen Triangle Optimization.
 
 Other settings you can set inside the window are:
 \begin{itemize}[noitemsep]

@@ -7,7 +7,7 @@
     <ShaderGroup Path="./Resources/PP_Blur_2017_1_22-23_03/PP_Blur.sbproj" IsOpen="true" />
     <ShaderGroup Path="./Resources/PP_Sepia_Vignette_2017_1_22-23_46/PP_Sepia_Vignette.sbproj" IsOpen="true" />
     <ShaderGroup Path="./Resources/PP_CubicLensDistortion_2017_1_23-06_55/PP_CubicLensDistortion.sbproj" IsOpen="true" />
-    <ShaderGroup Path="./Resources/Glow Outline_2017_10_2-15_53/NPR Shader.sbproj" IsOpen="true" />
+    <ShaderGroup Path="./Resources/PBR_2017_10_2-15_53/NPR Shader.sbproj" IsOpen="true" />
   </Shadergroups>
   <Images>
     <Image Name="plus.png" ImagePath="./Resources/.Data/Images/plus.png" IsBuiltIn="false" />
